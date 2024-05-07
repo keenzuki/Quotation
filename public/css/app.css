@@ -1,0 +1,47 @@
+/* Header css */
+.navbar-nav .nav-item a.nav-link,
+.nav-item a.nav-link {
+    color: rgb(0, 0, 0);
+    font-size: 17px;
+    padding-inline: 15px;
+}
+
+.navbar-nav .nav-item a.nav-link:hover {
+    color: rgb(0, 0, 0);
+    text-decoration: none;
+    background-color: rgb(39, 175, 23);
+    border-radius: 9px;
+}
+.navbar-nav .nav-item a.nav-link:active {
+    color: rgb(0, 0, 0);
+    text-decoration: underline;
+}
+
+.navbar {
+    background-color: rgb(255, 132, 0);
+    width: 100%;
+}
+
+.card-header {
+    background-color: rgb(39, 175, 23);
+}
+/* dashboard css */
+.parcel-link {
+    color: rgb(0, 0, 0);
+}
+
+.parcel-link:hover {
+    background-color: rgb(255, 132, 0);
+    color: white;
+    transition: 0.5s ease;
+}
+
+#registration {
+    max-width: 500px;
+}
+i{
+    color: green;
+}
+.btn-success{
+    background-color: green;
+}
