@@ -18,13 +18,15 @@
                     <td>{{ $client->address }}</td>
                     <td>
                         <div class="dropdown open">
-                            <button class="btn btn-secondary btn-sm dropdown-toggle" type="button" id="triggerId"
+                            <button class="btn btn-primary btn-sm dropdown-toggle" type="button" id="triggerId"
                                 data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 Action
                             </button>
                             <div class="dropdown-menu" aria-labelledby="triggerId">
                                 <a class="dropdown-item" href="#">View</a>
-                                <a class="dropdown-item" href="#">Quotation</a>
+                                <a class="dropdown-item"
+                                    href="{{ route('agent.createquotation', ['client' => $client->id]) }}">Make
+                                    Quotation</a>
                                 <div class="dropdown-divider"></div>
                                 <a class="dropdown-item" href="#">After divider action</a>
                             </div>

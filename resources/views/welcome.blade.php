@@ -38,11 +38,11 @@
             padding: 40px 30px 30px 30px;
             background-color: #ecf0f3;
             border-radius: 15px;
-            box-shadow: 13px 13px 20px #cbced1, -13px -13px 20px #fff;
+            box-shadow: 13px 13px 20px #cbced1, -13px -13px 20px #f08017;
         }
 
         .logo {
-            width: 80px;
+            width: 150px;
             margin: auto;
         }
 
@@ -50,7 +50,7 @@
             width: 100%;
             height: 80px;
             object-fit: cover;
-            border-radius: 50%;
+            border-radius: 10%;
             box-shadow: 0px 0px 3px #5f5f5f,
                 0px 0px 0px 5px #ecf0f3,
                 8px 8px 15px #a7aaa7,
@@ -72,7 +72,7 @@
             outline: none;
             background: none;
             font-size: 1.2rem;
-            color: #666;
+            color: #000000;
             padding: 10px 15px 10px 10px;
             /* border: 1px solid red; */
         }
@@ -92,7 +92,7 @@
             box-shadow: none;
             width: 100%;
             height: 40px;
-            background-color: #03A9F4;
+            background-color: #f08017;
             color: #fff;
             border-radius: 25px;
             box-shadow: 3px 3px 3px #b1b1b1,
@@ -127,11 +127,11 @@
     <div class="container d-flex justify-content-around align-items-center">
         <div class="wrapper">
             <div class="logo">
-                <img src="" alt="">
+                <img src="{{ asset('images/InspireLogo.jpg') }}" alt="">
             </div>
-            <div class="text-center mt-4 name">
+            {{-- <div class="text-center mt-4 name">
                 InspireHub
-            </div>
+            </div> --}}
             <form class="p-3 mt-3" action="{{ route('login') }}" method="POST">
                 @csrf
                 <label for="identifier">Phone or Email</label>

@@ -1,9 +1,24 @@
 <nav class="navbar navbar-expand-sm bg-body-tertiary position-fixed" style="z-index: 1;">
     <div class="container-fluid d-flex justify-content-between">
         <a class="navbar-brand" href="#">{{ env('APP_NAME') }}</a>
-        <div>
+        <div class="d-flex gap-1">
             @auth
-                Profile
+                <div class="btn-group">
+                    <button class="btn btn-info dropdown-toggle" type="button" id="triggerId" data-bs-toggle="dropdown"
+                        aria-haspopup="true" aria-expanded="false">
+                        {{ Auth::user()->lname }}
+                    </button>
+                    <div class="dropdown-menu dropdown-menu-end" aria-labelledby="triggerId">
+                        <a class="dropdown-item" href="{{ route('profile.edit') }}">Profile</a>
+                        <div class="dropdown-item">
+                            <form action="{{ route('logout') }}" method="POST">
+                                @csrf
+                                <button type="submit">Log Out</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+
             @endauth
             <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasExample"
                 aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation"><span

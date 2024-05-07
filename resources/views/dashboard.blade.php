@@ -1,4 +1,6 @@
 @extends('layouts.app')
 @section('content')
-    Logged in as agent
+    <div class="col content">
+        Logged in as agent
+    </div>
 @endsection

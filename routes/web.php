@@ -6,6 +6,7 @@ use App\Http\Controllers\Admin\AdminController;
 use App\Http\Controllers\AgentController;
 use App\Http\Controllers\PageController;
 use App\Http\Controllers\ClientController;
+use App\Http\Controllers\QuotationController;
 
 
 /*
@@ -38,6 +39,9 @@ Route::middleware('auth')->group(function () {
 Route::middleware('agent')->prefix('agent')->name('agent.')->group(function(){
     Route::get('/',[AgentController::class,'index'])->name('dashboard');
     Route::get('clients',[ClientController::class,'index'])->name('clients');
+    Route::get('client/quotation/{client}',[QuotationController::class,'create'])->name('createquotation');
+    Route::post('client/quotation/{client}',[QuotationController::class,'store'])->name('savequotation');
+    Route::post('client/register',[ClientController::class,'store'])->name('registerclient');
     // Route::get('users/filter/{role}',[AdminUserController::class,'filterUsers']);
     // Route::get('users/search',[AdminUserController::class,'searchUser']);
 

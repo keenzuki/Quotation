@@ -25,23 +25,6 @@
 .card-header {
     background-color: rgb(39, 175, 23);
 }
-/* dashboard css */
-.parcel-link {
-    color: rgb(0, 0, 0);
-}
-
-.parcel-link:hover {
-    background-color: rgb(255, 132, 0);
-    color: white;
-    transition: 0.5s ease;
-}
-
-#registration {
-    max-width: 500px;
-}
-i{
-    color: green;
-}
-.btn-success{
-    background-color: green;
+.breadcrumb .breadcrumb-item a {
+    text-decoration: none;
 }

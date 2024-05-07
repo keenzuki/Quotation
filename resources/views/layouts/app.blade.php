@@ -55,12 +55,13 @@
         @else
             {{-- <div class="container-xxl bg-white p-0"> --}}
             @include('layouts.navigation')
+            @include('Components.success')
             <div class="container-fluid">
                 <div class="row flex-nowrap">
                     @include('layouts.sidebar')
-                    <div class="col content">
-                        @yield('content')
-                    </div>
+                    {{-- <div class="col content"> --}}
+                    @yield('content')
+                    {{-- </div> --}}
                 </div>
             </div>
             @yield('footer')

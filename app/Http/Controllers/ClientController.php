@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Client;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class ClientController extends Controller
 {
@@ -12,24 +13,33 @@ class ClientController extends Controller
      */
     public function index()
     {
-        $clients = Client::where('agent_id',auth()->user()->id)->paginate(30);
+        $clients = Client::where('agent_id',auth()->user()->id)->orderBy('id','DESC')->paginate(20);
         return view('clients',compact('clients'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'name'=>['required','regex:/^[a-zA-Z\s]+$/'],
+            'phone' => ['required','starts_with:0','min:10','unique:clients,phone'],
+            'email' => ['sometimes','email'],
+            'address' => ['required','regex:/^[a-zA-Z0-9\s]+$/']
+        ]);
+        try {
+            DB::beginTransaction();
+            Client::create([
+                'name'=> $request->name,
+                'phone' => $request->phone,
+                'address' => $request->address,
+                'agent_id' => auth()->user()->id,
+                'email' => $request->email ? $request->email: null,
+            ]);
+            DB::commit();
+            return back()->with('success','Cliented registered succefully');
+        } catch (\Throwable $th) {
+            DB::rollBack();
+            return back()->with('error','Oops an error occured. Try again');
+        }
     }
 
     /**
