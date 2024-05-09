@@ -39,12 +39,29 @@ Route::middleware('auth')->group(function () {
 Route::middleware('agent')->prefix('agent')->name('agent.')->group(function(){
     Route::get('/',[AgentController::class,'index'])->name('dashboard');
     Route::get('clients',[ClientController::class,'index'])->name('clients');
-    Route::get('client/quotation/{client}',[QuotationController::class,'create'])->name('createquotation');
-    Route::post('client/quotation/{client}',[QuotationController::class,'store'])->name('savequotation');
+    Route::get('client/profile/{client}',[ClientController::class,'profile'])->name('clientprofile');
     Route::post('client/register',[ClientController::class,'store'])->name('registerclient');
-    // Route::get('users/filter/{role}',[AdminUserController::class,'filterUsers']);
-    // Route::get('users/search',[AdminUserController::class,'searchUser']);
-
+  
+    Route::get('make-quotation',[QuotationController::class,'makeQuotation'])->name('makequotation');
+    // Route::get('client/quotation/{client}',[QuotationController::class,'create'])->name('createquotation');
+   
+    Route::controller(QuotationController::class)->group(function(){
+        Route::get('quotations','index')->name('quotations');
+        Route::get('client/view-quotation/{quotation}','quotation')->name('viewquotation');
+        Route::get('client/edit-draft/{quotation}','editDraft')->name('editdraft');
+        Route::get('client/edit-quotation/{quotation}','editQuotation')->name('editquotation');
+        Route::get('update-quotation-to-invoice/{quotation}','updateQuotation2Invoice')->name('updateQ2I');
+        Route::post('client/update-quotation/{quotation}','updateQuotation')->name('updatequotation');
+        Route::post('client/complete-draft/{quotation}','completeDraft')->name('completedraft');
+        Route::post('client/quotation/{client}','store')->name('savequotation');
+        Route::post('quotation/store','storeQuotation')->name('storequotation');
+        Route::post('quotation/save-draft','storeDraft')->name('savedraft');
+        Route::delete('quotation/destroy/{quotation}','destroy')->name('deletequotation');
+        
+        Route::get('invoices','invoices')->name('invoices');
+    
+    });
+    
 });
 
 Route::middleware('admin')->prefix('admin')->name('admin.')->group(function(){

@@ -11,14 +11,13 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('quotations', function (Blueprint $table) {
+        Schema::create('sales', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('client_id');
-            $table->string('reference')->unique();
-            $table->string('title')->nullable();
-            $table->string('details')->nullable();
-            $table->decimal('cost',11,2)->default('0');
-            $table->integer('status')->default(0);
+            $table->unsignedBigInteger('quot_id');
+            $table->string('name')->nullable();
+            $table->integer('quantity')->nullable();
+            $table->string('unit')->nullable();
+            $table->decimal('price',11,2)->nullable();
             $table->timestamps();
         });
     }
@@ -28,6 +27,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('quotations');
+        Schema::dropIfExists('sales');
     }
 };

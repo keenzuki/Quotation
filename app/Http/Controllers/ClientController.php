@@ -3,14 +3,16 @@
 namespace App\Http\Controllers;
 
 use App\Models\Client;
+use App\Models\Quotation;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
 class ClientController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
+    // public $user;
+    // public function __construct($user){
+    //     $this->user = auth()->user();
+    // }
     public function index()
     {
         $clients = Client::where('agent_id',auth()->user()->id)->orderBy('id','DESC')->paginate(20);
@@ -45,9 +47,20 @@ class ClientController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Client $client)
+    public function profile(Client $client)
     {
-        //
+        $this->authorize('agentManageClient',$client);
+        $user = auth()->user();
+        $quotations = Quotation::from('quotations as q')
+                    ->join('clients as c', function($join) use($user){
+                        $join->on('c.id','=','q.client_id')
+                            ->where('c.agent_id',$user->id);
+                    })
+                    ->where('q.client_id',$client->id)
+                    ->select('q.id','q.title','q.details','q.cost','q.created_at','q.reference','q.status')
+                    ->orderBy('q.id','DESC')
+                    ->paginate(20);
+        return view('client_profile',compact(['client','quotations']));
     }
 
     /**

@@ -20,6 +20,13 @@ class Quotation extends Model
         'status'
     ];
 
+    public function client(){
+        return $this->belongsTo(Client::class,'client_id','id');
+    }
+    public function sales(){
+        return $this->hasMany(Sales::class,'quot_id','id');
+    }
+
     private static function gen(){
         $rand = random_bytes(2);
         return bin2hex($rand);

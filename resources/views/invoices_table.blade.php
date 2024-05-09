@@ -10,12 +10,13 @@
             </tr>
         </thead>
         <tbody class="table-group-divider">
-            @forelse ($clients as $client)
+            @forelse ($invoices as $invoice)
                 <tr class="table-primary">
-                    <td scope="row">{{ ($clients->currentPage() - 1) * $clients->perPage() + $loop->iteration }}</td>
-                    <td>{{ $client->name }}</td>
-                    <td>{{ $client->phone }}</td>
-                    <td>{{ $client->address }}</td>
+                    <td scope="row">{{ ($invoices->currentPage() - 1) * $invoices->perPage() + $loop->iteration }}
+                    </td>
+                    <td>{{ $invoice->name }}</td>
+                    <td>{{ $invoice->phone }}</td>
+                    <td>{{ $invoice->address }}</td>
                     <td>
                         <div class="dropdown open">
                             <button class="btn btn-primary btn-sm dropdown-toggle" type="button" id="triggerId"
