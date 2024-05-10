@@ -78,7 +78,7 @@
                     </td>
                 </tr>
             @empty
-                <td class="text-center text-info">No data available</td>
+                <td colspan="7" class="text-center text-info">No data available</td>
             @endforelse
         </tbody>
         <tfoot>

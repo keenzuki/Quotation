@@ -27,7 +27,8 @@
                         </div>
                         <div class="col-6">
                             <label for="title">Title</label>
-                            <input type="text" class="form-control" name="title" id="title" required>
+                            <input type="text" class="form-control text-capitalize" name="title" id="title"
+                                required>
                         </div>
                     </div>
                     <div class="table-responsive">
@@ -45,10 +46,11 @@
                             <tbody id="itemsTableBody">
                                 <tr>
                                     <td><input required type="text" name="items[]" autocomplete="off"
-                                            class="form-control"></td>
+                                            class="form-control text-capitalize"></td>
                                     <td><input required type="number" name="prices[]" class="form-control"></td>
                                     <td><input required type="number" name="quantities[]" class="form-control"></td>
-                                    <td><input required type="text" name="units[]" class="form-control"></td>
+                                    <td><input required type="text" name="units[]" class="form-control text-capitalize">
+                                    </td>
                                     <td><input type="text" name="subtotals[]" class="form-control" readonly>
                                     </td>
                                     <td><button type="button" class="btn btn-danger btn-sm removeRow">Remove</button>
@@ -92,10 +94,10 @@
                 $('#addRow').click(function() {
                     $('#itemsTableBody').append(
                         '<tr>' +
-                        '<td><input autocomplete="off" type="text" name="items[]" class="form-control"></td>' +
+                        '<td><input autocomplete="off" type="text" name="items[]" class="form-control text-capitalize"></td>' +
                         '<td><input autocomplete="off" type="number" name="prices[]" class="form-control"></td>' +
                         '<td><input autocomplete="off" type="number" name="quantities[]" class="form-control"></td>' +
-                        '<td><input autocomplete="off" type="text" name="units[]" class="form-control"></td>' +
+                        '<td><input autocomplete="off" type="text" name="units[]" class="form-control text-capitalize"></td>' +
                         '<td><input autocomplete="off" type="text" name="subtotals[]" class="form-control" readonly></td>' +
                         '<td><button type="button" class="btn btn-danger btn-sm removeRow">Remove</button></td>' +
                         '</tr>'

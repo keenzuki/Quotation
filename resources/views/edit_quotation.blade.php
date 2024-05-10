@@ -29,8 +29,8 @@
                         </div>
                         <div class="col-6">
                             <label for="title">Title</label>
-                            <input value="{{ $quotation->title }}" type="text" class="form-control" name="title"
-                                id="title" required>
+                            <input value="{{ $quotation->title }}" type="text" class="form-control text-capitalize"
+                                name="title" id="title" required>
                         </div>
                     </div>
                     <div class="table-responsive">
@@ -49,13 +49,13 @@
                                 @foreach ($quotation->sales as $sale)
                                     <tr>
                                         <td><input value="{{ $sale->name }}" type="text" name="items[]"
-                                                autocomplete="off" class="form-control"></td>
+                                                autocomplete="off" class="form-control text-capitalize"></td>
                                         <td><input value="{{ $sale->price }}" type="number" name="prices[]"
                                                 class="form-control"></td>
                                         <td><input value="{{ $sale->quantity }}" type="number" name="quantities[]"
                                                 class="form-control"></td>
                                         <td><input value="{{ $sale->unit }}" type="text" name="units[]"
-                                                class="form-control"></td>
+                                                class="form-control text-capitalize"></td>
                                         <td><input value="{{ $sale->quantity * $sale->price }}" type="text"
                                                 name="subtotals[]" class="form-control" readonly>
                                         </td>
@@ -92,10 +92,10 @@
                 $('#addRow').click(function() {
                     $('#itemsTableBody').append(
                         '<tr>' +
-                        '<td><input required autocomplete="off" type="text" name="items[]" class="form-control"></td>' +
+                        '<td><input required autocomplete="off" type="text" name="items[]" class="form-control text-capitalize"></td>' +
                         '<td><input required autocomplete="off" type="number" name="prices[]" class="form-control"></td>' +
                         '<td><input required autocomplete="off" type="number" name="quantities[]" class="form-control"></td>' +
-                        '<td><input required autocomplete="off" type="text" name="units[]" class="form-control"></td>' +
+                        '<td><input required autocomplete="off" type="text" name="units[]" class="form-control text-capitalize"></td>' +
                         '<td><input autocomplete="off" type="text" name="subtotals[]" class="form-control" readonly></td>' +
                         '<td><button type="button" class="btn btn-danger btn-sm removeRow">Remove</button></td>' +
                         '</tr>'

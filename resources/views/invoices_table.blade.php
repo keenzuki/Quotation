@@ -3,9 +3,11 @@
         <thead class="table-light">
             <tr>
                 <th>#</th>
-                <th>Name</th>
-                <th>Phone</th>
-                <th>Address</th>
+                <th>Ref</th>
+                <th>Title</th>
+                <th>Client</th>
+                <th>Price (Ksh)</th>
+                <th>Date</th>
                 <th>Action</th>
             </tr>
         </thead>
@@ -14,27 +16,42 @@
                 <tr class="table-primary">
                     <td scope="row">{{ ($invoices->currentPage() - 1) * $invoices->perPage() + $loop->iteration }}
                     </td>
-                    <td>{{ $invoice->name }}</td>
-                    <td>{{ $invoice->phone }}</td>
-                    <td>{{ $invoice->address }}</td>
+                    <td>{{ $invoice->reference }} </td>
+                    <td>{{ $invoice->title }}</td>
+                    <td>{{ $invoice->client }}</td>
+                    <td>{{ number_format($invoice->cost, 2, '.', ',') }}</td>
+                    <td>{{ $invoice->created_at->format('M d, Y') }}</td>
                     <td>
                         <div class="dropdown open">
                             <button class="btn btn-primary btn-sm dropdown-toggle" type="button" id="triggerId"
                                 data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                Action
+                                invoice
                             </button>
-                            <div class="dropdown-menu" aria-labelledby="triggerId">
+                            <div class="dropdown-menu dropdown-menu-end" aria-labelledby="triggerId">
                                 <a class="dropdown-item"
-                                    href="{{ route('agent.clientprofile', ['client' => $client->id]) }}">profile</a>
+                                    href="{{ route('agent.viewinvoice', ['invoice' => $invoice->id]) }}"><i
+                                        class="bi bi-tv text-secondary"></i> View Invoice</a>
                                 <a class="dropdown-item"
-                                    href="{{ route('agent.createquotation', ['client' => $client->id]) }}">Make
-                                    Quotation</a>
-                                <div class="dropdown-divider"></div>
-                                <a class="dropdown-item" href="#">After divider action</a>
+                                    href="{{ route('agent.editinvoice', ['invoice' => $invoice->id]) }}"><i
+                                        class="bi bi-pencil-square text-info"></i> Edit
+                                    invoice</a>
+                                <a class="dropdown-item"
+                                    href="{{ route('agent.editinvoice', ['invoice' => $invoice->id]) }}"><i
+                                        class="bi bi-cash-coin text-primary"></i> Make Payment</a>
+                                <hr>
+                                <form class="dropdown-item"
+                                    action="{{ route('agent.deleteinvoice', ['invoice' => $invoice->id]) }}"
+                                    method="post">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button class="text-danger" type="submit"
+                                        onclick="return confirm('Please Confrrm you want to delete this Invoice')"><i
+                                            class="bi bi-trash text-danger"></i>
+                                        Delete</button>
+                                </form>
                             </div>
+
                         </div>
-
-
                     </td>
                 </tr>
             @empty

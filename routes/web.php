@@ -42,11 +42,11 @@ Route::middleware('agent')->prefix('agent')->name('agent.')->group(function(){
     Route::get('client/profile/{client}',[ClientController::class,'profile'])->name('clientprofile');
     Route::post('client/register',[ClientController::class,'store'])->name('registerclient');
   
-    Route::get('make-quotation',[QuotationController::class,'makeQuotation'])->name('makequotation');
     // Route::get('client/quotation/{client}',[QuotationController::class,'create'])->name('createquotation');
    
     Route::controller(QuotationController::class)->group(function(){
         Route::get('quotations','index')->name('quotations');
+        Route::get('make-quotation','makeQuotation')->name('makequotation');
         Route::get('client/view-quotation/{quotation}','quotation')->name('viewquotation');
         Route::get('client/edit-draft/{quotation}','editDraft')->name('editdraft');
         Route::get('client/edit-quotation/{quotation}','editQuotation')->name('editquotation');
@@ -59,6 +59,10 @@ Route::middleware('agent')->prefix('agent')->name('agent.')->group(function(){
         Route::delete('quotation/destroy/{quotation}','destroy')->name('deletequotation');
         
         Route::get('invoices','invoices')->name('invoices');
+        Route::get('client/edit-invoice/{invoice}','editInvoice')->name('editinvoice');
+        Route::delete('invoice/destroy/{invoice}','destroyInvoice')->name('deleteinvoice');
+        Route::get('view-invoice/{invoice}','invoice')->name('viewinvoice');
+        Route::get('invoice/{invoice}/pdf','invoicePdf')->name('invoicepdf');
     
     });
     

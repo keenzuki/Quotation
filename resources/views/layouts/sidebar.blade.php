@@ -125,7 +125,7 @@
                 <span class="heading ">Invoices</span>
                 <hr class="text-black me-2 my-1">
                 <li class="nav-item">
-                    <a href="{{ route('agent.clients') }}" class="nav-link">
+                    <a href="{{ route('agent.invoices') }}" class="nav-link">
                         <i class="bi bi-receipt fs-3" data-bs-toggle="tooltip" data-bs-placement="bottom"
                             title="Parcels"></i>
                         <span class="ms-2 ms-md-4 nav-name d-none d-sm-inline">My Invoices</span>

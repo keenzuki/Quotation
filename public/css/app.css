@@ -23,8 +23,12 @@
 }
 
 .card-header {
-    background-color: rgb(39, 175, 23);
+    background-color: rgb(213, 229, 236);
 }
 .breadcrumb .breadcrumb-item a {
     text-decoration: none;
 }
+
+/* .card-body{
+    padding: 0px;
+} */

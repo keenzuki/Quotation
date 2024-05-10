@@ -25,9 +25,9 @@
                             <div class="dropdown-menu" aria-labelledby="triggerId">
                                 <a class="dropdown-item"
                                     href="{{ route('agent.clientprofile', ['client' => $client->id]) }}">profile</a>
-                                <a class="dropdown-item"
+                                {{-- <a class="dropdown-item"
                                     href="{{ route('agent.createquotation', ['client' => $client->id]) }}">Make
-                                    Quotation</a>
+                                    Quotation</a> --}}
                                 <div class="dropdown-divider"></div>
                                 <a class="dropdown-item" href="#">After divider action</a>
                             </div>

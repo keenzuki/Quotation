@@ -7,6 +7,7 @@ use App\Models\Client;
 use App\Models\Sales;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use PDF;
 
 class QuotationController extends Controller
 {
@@ -28,10 +29,6 @@ class QuotationController extends Controller
         $client = $quotation->client;
         $this->authorize('agentManageClient',$client);
         return view('view_quotation',compact(['quotation']));
-    }
-    public function invoices(){
-        $invoices = Quotation::where('status',true)->paginate(20);
-     
     }
     public function create(Client $client)
     {
@@ -264,25 +261,12 @@ class QuotationController extends Controller
                     ->paginate(20);
         return view('invoices',compact(['invoices']));
     }
-    public function show(Quotation $quotation)
+    public function invoice(Quotation $invoice)
     {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Quotation $quotation)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, Quotation $quotation)
-    {
-        //
+        $client = $invoice->client;
+        $this->authorize('agentManageClient',$client);
+        $sales = Sales::where('quot_id',$invoice->id)->get();
+        return view('view_invoice',compact(['invoice','sales']));
     }
 
     /**
@@ -297,5 +281,25 @@ class QuotationController extends Controller
         }
         $quotation->delete();
         return back()->with('success','Quotation Erased Successfully');
+    }
+
+    // public function invoicePdf(Quotation $invoice)
+    // {
+    //     $sales = Sales::where('quot_id',$invoice->id)->get();
+    //     $data = ['invoice' => $invoice,'sales'=>$sales];
+    //     $pdf = PDF::loadView('reports.invoice_pdf', compact('invoice','sales'));
+    //     return $pdf->download('document.pdf');
+    // }
+    public function invoicePdf(Quotation $invoice)
+    { 
+        $sales = Sales::where('quot_id',$invoice->id)->get();
+        // $data = ['invoice' => $invoice,'sales'=>$sales];
+        $client= $invoice->client;
+        $title = "customer invoice";
+        $pdf = PDF::loadView('reports.invoice_pdf',compact(['invoice','client','sales','title']));
+        $pdf->setPaper("a4", "portrait");
+        $pdfname= 'invoice-'.$invoice->reference.'.pdf';
+        $doc = $pdf->stream($pdfname);
+        return $doc;
     }
 }

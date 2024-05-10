@@ -23,7 +23,7 @@
                 @include('invoices_table')
                 <div class="row">
                     <div class="col-12 text-center">
-                        {{ $clients->links() }}
+                        {{ $invoices->links() }}
                     </div>
                 </div>
             </div>
