@@ -4,9 +4,11 @@ namespace App\Http\Controllers;
 
 use App\Models\Quotation;
 use App\Models\Client;
+use App\Models\Payment;
 use App\Models\Sales;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use App\Jobs\PaymentProcessing;
 use PDF;
 
 class QuotationController extends Controller
@@ -38,6 +40,11 @@ class QuotationController extends Controller
     {
         $clients=Client::where('agent_id',auth()->user()->id)->get();
         return view('make_quotation',compact(['clients']));
+    }
+    public function addQuotation(Client $client)
+    {
+        $this->authorize('agentManageClient', $client);
+        return view('add_quotation',compact(['client']));
     }
     public function storeDraft(Request $request){
         $request->validate([
@@ -86,10 +93,18 @@ class QuotationController extends Controller
     public function updateQuotation2Invoice(Quotation $quotation){
         $client = $quotation->client;
         $this->authorize('agentManageClient', $client);
-        $quotation->update([
-            'status' => 3 //Invoice status code
-        ]);
-       return back()->with('success','Quotation converted successfully');
+        try {
+            DB::beginTransaction();
+            $quotation->update([
+                'status' => 3 //Invoice status code
+            ]);
+            dispatch(new PaymentProcessing($client));
+            DB::commit();
+            return redirect()->route('agent.clientprofile',['client'=>$client->id])->with('success','Quotation converted successfully');
+        } catch (\Throwable $th) {
+            DB::rollBack();
+            return back()->with('error','An error occured. Try again');
+        }
     }
     public function editQuotation(Quotation $quotation){
         $client = $quotation->client;
@@ -109,13 +124,6 @@ class QuotationController extends Controller
         $this->authorize('agentManageClient', $client);
         try {
             DB::beginTransaction();
-            // $quotation->update([
-            //     // 'reference' => Quotation::genref(),
-            //     // 'client_id' => $request->client,
-            //     'title' =>$request->title,
-            //     'status' => 2,
-            //     'details' => $request->comments
-            // ]);
             foreach ($quotation->sales as $key => $item) {
                 $item->delete();
             }
@@ -132,12 +140,14 @@ class QuotationController extends Controller
             }
             $quotation->update([
                 'title' =>$request->title,
-                'status' => 2,
+                // 'status' => 2,
                 'details' => $request->comments,
                 'cost' => $total
             ]);
             DB::commit();
-            return redirect()->route('agent.quotations')->with('success','Quotation updated successfully');
+            // if($request->route()->getName()=="agent.update"){
+            // };
+            return redirect()->route('agent.clientprofile',['client'=>$client->id])->with('success','Quotation updated successfully');
         } catch (\Throwable $th) {
             DB::rollBack();
             return back()-> with('error','An error occured');
@@ -177,7 +187,7 @@ class QuotationController extends Controller
                 'cost' => $total
             ]);
             DB::commit();
-            return redirect()->route('agent.quotations')->with('success','Draft saved as Quotation successfully');
+            return redirect()->route('agent.clientprofile',['client'=>$client->id])->with('success','Draft saved as Quotation successfully');
         } catch (\Throwable $th) {
             DB::rollBack();
             return back()-> with('error','An error occured');
@@ -193,6 +203,10 @@ class QuotationController extends Controller
             'prices.*' => 'required|min:0',
             'comments' => 'required'
         ]);
+        $client = Client::where('id',$request->client)->first();
+        if (!$this->authorize('agentManageClient',$client)) {
+            return back()->with('error','You don\'t have enough previledge for this client');
+        }
         try {
             DB::beginTransaction();
             $quotation = Quotation::create([
@@ -217,7 +231,7 @@ class QuotationController extends Controller
                 'cost' => $total
             ]);
             DB::commit();
-            return redirect()->route('agent.quotations')->with('success','Quotation stored successfully');
+            return redirect()->route('agent.clientprofile',['client'=>$client->id])->with('success','Quotation stored successfully');
         } catch (\Throwable $th) {
             DB::rollBack();
             return back()-> with('error','An error occured');
@@ -241,7 +255,7 @@ class QuotationController extends Controller
                 'details' => $request->details
             ]);
             DB::commit();
-            return redirect()->route('agent.clients')->with('success','Quotation saved successfully');
+            return redirect()->route('agent.clientprofile',['client'=>$client->id])->with('success','Quotation saved successfully');
         } catch (\Throwable $th) {
             DB::rollBack();
             return back()->with('error','Ooops. Somethings went wrong. Try again');
@@ -268,20 +282,75 @@ class QuotationController extends Controller
         $sales = Sales::where('quot_id',$invoice->id)->get();
         return view('view_invoice',compact(['invoice','sales']));
     }
-
-    /**
-     * Remove the specified resource from storage.
-     */
+    public function editInvoice(Quotation $invoice){
+        $client = $invoice->client;
+        $this->authorize('agentManageClient', $client);
+        if ($invoice->paymentAllocations()->count() > 0) {
+            return back()->with('error','This invoice has payments already');
+        }
+        return view('edit_invoice',compact(['invoice']));
+    }
+    public function updateInvoice(Request $request,Quotation $invoice){
+        // dd($request);
+        $request->validate([
+            'items.*' => 'required',
+            'quantities.*' => 'required|min:1',
+            'units.*' => 'required',
+            'prices.*' => 'required|min:0',
+            'comments' => 'required'
+        ]);
+        $client=$invoice->client;
+        $this->authorize('agentManageClient', $client);
+        try {
+            DB::beginTransaction();
+            foreach ($invoice->sales as $key => $item) {
+                $item->delete();
+            }
+            $total = 0;
+            foreach ($request->items as $key => $item) {
+                Sales::create([
+                    'quot_id' => $invoice->id,
+                    'name' => $request->items[$key],
+                    'quantity' => $request->quantities[$key],
+                    'unit' => $request->units[$key],
+                    'price' => $request->prices[$key],
+                ]);
+                $total += ($request->quantities[$key] * $request->prices[$key]);
+            }
+            $invoice->update([
+                'title' =>$request->title,
+                // 'status' => 2,
+                'details' => $request->comments,
+                'cost' => $total
+            ]);
+            DB::commit();
+            // if($request->route()->getName()=="agent.update"){
+            // };
+            return redirect()->route('agent.clientprofile',['client'=>$client->id])->with('success','Invoice updated successfully');
+        } catch (\Throwable $th) {
+            DB::rollBack();
+            return back()-> with('error','An error occured');
+        }
+    }
     public function destroy(Quotation $quotation)
     {
         $client = $quotation->client;
         $this->authorize('agentManageClient', $client);
+        $status = $quotation->status;
+        if ($status == 1) {
+            $category = "Draft";
+        } elseif ($status == 2) {
+            $category = "Quotation";
+        }elseif ($status == 3) {
+            $category = "Invoice";
+        }
         foreach ($quotation->sales as $key => $sale) {
             $sale->delete();
         }
         $quotation->delete();
-        return back()->with('success','Quotation Erased Successfully');
+        return back()->with('success',$category.' Erased Successfully');
     }
+
 
     // public function invoicePdf(Quotation $invoice)
     // {
@@ -295,10 +364,48 @@ class QuotationController extends Controller
         $sales = Sales::where('quot_id',$invoice->id)->get();
         // $data = ['invoice' => $invoice,'sales'=>$sales];
         $client= $invoice->client;
+        $payments = Payment::from('payments as p')
+                ->join('payment_allocations as pa', function($join) use($invoice){
+                    $join->on('pa.pay_id','p.id')
+                    ->where('pa.inv_id',$invoice->id);
+                })
+                ->where('client_id',$client->id)
+                ->select(
+                    DB::raw("COALESCE(p.reference , 'N/A') as reference"),
+                    'p.mode',
+                    'p.paid_on as date',
+                    'pa.allocated as amount'
+                )
+                ->get();
         $title = "customer invoice";
-        $pdf = PDF::loadView('reports.invoice_pdf',compact(['invoice','client','sales','title']));
+        $pdf = PDF::loadView('reports.invoice_pdf',compact(['invoice','client','sales','title','payments']));
         $pdf->setPaper("a4", "portrait");
         $pdfname= 'invoice-'.$invoice->reference.'.pdf';
+        $doc = $pdf->stream($pdfname);
+        return $doc;
+    }
+    public function quotationPdf(Quotation $quotation)
+    { 
+        $sales = Sales::where('quot_id',$quotation->id)->get();
+        // $data = ['invoice' => $quotation,'sales'=>$sales];
+        $client= $quotation->client;
+        // $payments = Payment::from('payments as p')
+        //         ->join('payment_allocations as pa', function($join) use($quotation){
+        //             $join->on('pa.pay_id','p.id')
+        //             ->where('pa.inv_id',$quotation->id);
+        //         })
+        //         ->where('client_id',$client->id)
+        //         ->select(
+        //             DB::raw("COALESCE(p.reference , 'N/A') as reference"),
+        //             'p.mode',
+        //             'p.paid_on as date',
+        //             'pa.allocated as amount'
+        //         )
+        //         ->get();
+        $title = "customer invoice";
+        $pdf = PDF::loadView('reports.quotation_pdf',compact(['quotation','client','sales','title']));
+        $pdf->setPaper("a4", "portrait");
+        $pdfname= 'invoice-'.$quotation->reference.'.pdf';
         $doc = $pdf->stream($pdfname);
         return $doc;
     }

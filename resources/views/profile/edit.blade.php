@@ -8,7 +8,7 @@
         </ol>
         <div class="card shadow">
             <div class="card-header">
-                <h5 class="text-white">Profile Details</h5>
+                <h5>Profile Details</h5>
             </div>
             <div class="card-body">
                 <form enctype="multipart/form-data" action="{{ route('profile.update') }}" method="post">
@@ -17,7 +17,7 @@
                     <div class="row">
                         <div class="d-flex justify-content-center align-items-center flex-column">
                             <label for="imageInput" style="cursor: pointer">
-                                <img id="profilePhoto" src="{{ asset('profiles/' . $user->photo) }}" alt="no image"
+                                <img id="profilePhoto" src="{{ asset('images/profiles/' . $user->photo) }}" alt="no image"
                                     style="width: 140px; height: 140px; border-radius: 100%; object-fit:cover; overflow:hidden;">
                             </label>
                             <span class="fw-bold fs-5">{{ $user->fname }}</span>

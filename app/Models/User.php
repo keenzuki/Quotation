@@ -26,7 +26,8 @@ class User extends Authenticatable
         'is_admin',
         'role_id',
         'status',
-        'email_verified_at'
+        'email_verified_at',
+        'photo'
     ];
 
     public function role(){

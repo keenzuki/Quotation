@@ -10,10 +10,10 @@
         <div class="card">
             <div class="card-header d-flex justify-content-between">
                 <h4>My Clients Invoices
-                    <button type="button" class="btn-primary bg-primary rounded-circle" data-bs-toggle="modal"
+                    {{-- <button type="button" class="btn-primary bg-primary rounded-circle" data-bs-toggle="modal"
                         data-bs-target="#staticBackdrop">
                         <i class="bi bi-plus"></i>
-                    </button>
+                    </button> --}}
                 </h4>
                 <div>
                     <input type="text" class="form-control" placeholder="Search ...">

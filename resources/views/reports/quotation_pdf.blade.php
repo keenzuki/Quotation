@@ -45,7 +45,7 @@
                     </tfoot>
                 </table>
                 <hr style="padding: 0px;">
-                <h2 id="tableHead" style="text-transform: uppercase; text-align: left; margin-top:30px;">Transactions
+                {{-- <h2 id="tableHead" style="text-transform: uppercase; text-align: left; margin-top:30px;">Transactions
                 </h2>
                 <table class="table">
                     <thead>
@@ -113,9 +113,7 @@
 
                         </tr>
                     </tfoot>
-                </table>
-
-
+                </table> --}}
             </div>
         </div>
     </main>

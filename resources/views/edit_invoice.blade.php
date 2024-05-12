@@ -4,24 +4,24 @@
         <nav aria-label="breadcrumb">
             <ol class="breadcrumb">
                 <li class="breadcrumb-item"><a href="{{ route('dashboard') }}">Dashboard</a></li>
-                <li class="breadcrumb-item"><a href="{{ route('agent.quotations') }}">Quotations</a></li>
-                <li class="breadcrumb-item active" aria-current="page">Draft - <span
-                        class="bg-secondary px-1 rounded text-white">{{ $quotation->reference }}</span></li>
+                <li class="breadcrumb-item"><a href="{{ route('agent.invoices') }}">invoices</a></li>
+                <li class="breadcrumb-item active" aria-current="page">invoice - <span
+                        class="bg-secondary px-1 rounded text-white">{{ $invoice->reference }}</span></li>
             </ol>
         </nav>
         <div class="card">
             <div class="card-header">
-                Complete Draft
+                Edit invoice
             </div>
             <div class="card-body">
-                <form id="salesForm" action="{{ route('agent.completedraft', ['quotation' => $quotation->id]) }}"
+                <form id="salesForm" action="{{ route('agent.updateinvoice', ['invoice' => $invoice->id]) }}"
                     method="post">
                     @csrf
                     <div class="row">
                         <div class="col-6">
                             <label for="client">Client</label>
                             <select required name="client" id="client" class="form-select">
-                                <option value="client" selected>{{ $quotation->client->name }}</option>
+                                <option value="client" selected>{{ $invoice->client->name }}</option>
                                 {{-- @foreach ($clients as $client)
                                     <option value="{{ $client->id }}">{{ $client->name }}</option>
                                 @endforeach --}}
@@ -29,7 +29,7 @@
                         </div>
                         <div class="col-6">
                             <label for="title">Title</label>
-                            <input value="{{ $quotation->title }}" type="text" class="form-control text-capitalize"
+                            <input value="{{ $invoice->title }}" type="text" class="form-control text-capitalize"
                                 name="title" id="title" required>
                         </div>
                     </div>
@@ -46,15 +46,15 @@
                                 </tr>
                             </thead>
                             <tbody id="itemsTableBody">
-                                @foreach ($quotation->sales as $sale)
+                                @foreach ($invoice->sales as $sale)
                                     <tr>
-                                        <td><input required value="{{ $sale->name }}" type="text" name="items[]"
+                                        <td><input value="{{ $sale->name }}" type="text" name="items[]"
                                                 autocomplete="off" class="form-control text-capitalize"></td>
-                                        <td><input required value="{{ $sale->price }}" type="number" name="prices[]"
+                                        <td><input value="{{ $sale->price }}" type="number" name="prices[]"
                                                 class="form-control"></td>
-                                        <td><input required value="{{ $sale->quantity }}" type="number" name="quantities[]"
+                                        <td><input value="{{ $sale->quantity }}" type="number" name="quantities[]"
                                                 class="form-control"></td>
-                                        <td><input required value="{{ $sale->unit }}" type="text" name="units[]"
+                                        <td><input value="{{ $sale->unit }}" type="text" name="units[]"
                                                 class="form-control text-capitalize"></td>
                                         <td><input value="{{ $sale->quantity * $sale->price }}" type="text"
                                                 name="subtotals[]" class="form-control" readonly>
@@ -69,7 +69,7 @@
                                     <h1 class="fs-5">Total</h1>
                                 </td>
                                 <td>
-                                    <h1 class="fs-5" id="QTotal">{{ $quotation->cost }}</h1>
+                                    <h1 class="fs-5" id="QTotal">{{ $invoice->cost }}</h1>
                                 </td>
                             </tr>
                         </table>
@@ -78,10 +78,10 @@
                     <hr>
                     <div class="row">
                         <div class="col-12">
-                            <textarea required name="comments" id="comments" rows="2" class="form-control">{{ $quotation->details }}</textarea>
+                            <textarea required name="comments" id="comments" rows="2" class="form-control">{{ $invoice->details }}</textarea>
                         </div>
                     </div>
-                    <button type="submit" class="btn btn-primary mt-3">Submit</button>
+                    <button type="submit" class="btn btn-primary mt-3">Update</button>
                     {{-- <button type="button" class="btn btn-info mt-3" id="saveDraftBtn">Save Draft</button> --}}
                 </form>
             </div>

@@ -7,6 +7,8 @@ use App\Http\Controllers\AgentController;
 use App\Http\Controllers\PageController;
 use App\Http\Controllers\ClientController;
 use App\Http\Controllers\QuotationController;
+use App\Http\Controllers\PaymentController;
+use App\Http\Controllers\SalesController;
 
 
 /*
@@ -41,12 +43,15 @@ Route::middleware('agent')->prefix('agent')->name('agent.')->group(function(){
     Route::get('clients',[ClientController::class,'index'])->name('clients');
     Route::get('client/profile/{client}',[ClientController::class,'profile'])->name('clientprofile');
     Route::post('client/register',[ClientController::class,'store'])->name('registerclient');
+    Route::put('client/update/{client}',[ClientController::class,'update'])->name('updateclient');
+    Route::post('client/store-payment/{client}',[PaymentController::class,'store'])->name('addpayment');
   
-    // Route::get('client/quotation/{client}',[QuotationController::class,'create'])->name('createquotation');
+    Route::get('items',[SalesController::class,'index'])->name('items');
    
     Route::controller(QuotationController::class)->group(function(){
         Route::get('quotations','index')->name('quotations');
         Route::get('make-quotation','makeQuotation')->name('makequotation');
+        Route::get('client/add-quotation/{client}','addQuotation')->name('addquotation');
         Route::get('client/view-quotation/{quotation}','quotation')->name('viewquotation');
         Route::get('client/edit-draft/{quotation}','editDraft')->name('editdraft');
         Route::get('client/edit-quotation/{quotation}','editQuotation')->name('editquotation');
@@ -55,6 +60,7 @@ Route::middleware('agent')->prefix('agent')->name('agent.')->group(function(){
         Route::post('client/complete-draft/{quotation}','completeDraft')->name('completedraft');
         Route::post('client/quotation/{client}','store')->name('savequotation');
         Route::post('quotation/store','storeQuotation')->name('storequotation');
+        Route::post('client/quotation/store/{client}','storeClientQuotation')->name('storeclientquotation');
         Route::post('quotation/save-draft','storeDraft')->name('savedraft');
         Route::delete('quotation/destroy/{quotation}','destroy')->name('deletequotation');
         
@@ -63,7 +69,9 @@ Route::middleware('agent')->prefix('agent')->name('agent.')->group(function(){
         Route::delete('invoice/destroy/{invoice}','destroyInvoice')->name('deleteinvoice');
         Route::get('view-invoice/{invoice}','invoice')->name('viewinvoice');
         Route::get('invoice/{invoice}/pdf','invoicePdf')->name('invoicepdf');
-    
+        Route::get('quotation/{quotation}/pdf','quotationPdf')->name('quotationpdf');
+        Route::post('client/update-invoice/{invoice}','updateInvoice')->name('updateinvoice');
+
     });
     
 });

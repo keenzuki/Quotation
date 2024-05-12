@@ -10,8 +10,9 @@
 
         #heading1 h3 {
             text-transform: uppercase;
-            text-decoration: underline;
-            margin: 0px;
+            /* text-decoration: underline; */
+            margin-top: 7px;
+            margin-bottom: 5px;
         }
 
         .table {
@@ -29,30 +30,34 @@
 
         .table th {
             background-color: rgb(216, 209, 204);
-            justify-content: center;
+            /* justify-content: center; */
             font-size: 20px;
         }
 
-        .table thead {
+        /* .table thead {
             border-bottom: 1px solid #000;
-        }
+        } */
 
         .table tbody tr {
-            text-align: center;
+            /* text-align: center; */
             font-size: 20px;
         }
 
-        .table tbody tr:nth-child(odd) {
-            background-color: #e6f3fe;
-        }
+        /* .table tbody tr:nth-child(odd) {
+            background-color: #f0f0f0;
+        } */
 
         .table tfoot tr {
             background-color: #fff;
         }
 
         .table tfoot {
-            border-top: 1px solid #000;
+            border-top: 1px solid #413f3f;
         }
+
+        /* #heading2 {
+            border-bottom: 1px solid #413f3f;
+        } */
 
         .table tfoot tr td h5 {
             margin: 1px;
@@ -63,39 +68,49 @@
             text-align: center;
         }
 
-        table tr td span {
+        /* table tr td span {
             text-decoration: underline;
-        }
+        } */
 
         table tr td p {
             margin: 0px;
+        }
+
+        #tableHead {
+            margin-bottom: 2px;
+            text-align: center;
+        }
+
+        table #noPayment {
+            font-size: 18px;
+            text-align: center;
         }
     </style>
 </head>
 <header>
     <div id="heading1">
         <img src="images/InspireLogo.jpg" width="300px" />
-        <h3 class="text-uppercase">{{ $title }}</h3>
+        <h3 style="padding: 5px;">{{ $title }}</h3>
     </div>
-    <table id="heading2" style="width: 100%; border-collapse: collapse;">
+    <table id="heading2" style="width: 100%; border-collapse: collapse; border-bottom: 1px solid #413f3f;">
         <tr>
             <td style="max-width: 50px; vertical-align: top; overflow-wrap: break-word;">
                 <span class="fs-2">From</span>
-                <p>InspireHub</p>
-                <p style="color: blue;">support@inspirehub.co.ke
+                <p>Inspire Hub Limited</p>
+                <p style="color: blue;">billing@inspirehub.co.ke
                 </p>
-                <p>P O Box 96</p>
+                {{-- <p>P O Box 96</p> --}}
             </td>
             <td style="max-width: 50px; vertical-align: top; overflow-wrap: break-word;">
                 <span>To</span>
                 <p>{{ $client->name }}</p>
                 <p style="color: blue;">{{ $client->email }}</p>
-                <p>{{ $client->address }}</p>
+                {{-- <p>{{ $client->address }}</p> --}}
             </td>
-            <td style="max-width: 50px; vertical-align: top; overflow-wrap: break-word;">
-                <span>Invoice</span>
-                <p><small>Ref: </small>{{ $invoice->reference }}</p>
-                <p>Date: {{ \Carbon\Carbon::parse($invoice->created_at)->format('D d M, Y') }}</p>
+            <td style="max-width: 50px; vertical-align: top; overflow-wrap: break-word; text-align:right;">
+                <span>Invoice Details</span>
+                <p><small>Ref: </small>{{ $quotation->reference }}</p>
+                <p>Date: {{ \Carbon\Carbon::parse($quotation->created_at)->format('D d M, Y') }}</p>
             </td>
         </tr>
     </table>

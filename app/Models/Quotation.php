@@ -17,7 +17,9 @@ class Quotation extends Model
         'title',
         'details',
         'cost',
-        'status'
+        'status',
+        'pay_status',
+        'paid_amount'
     ];
 
     public function client(){
@@ -25,6 +27,9 @@ class Quotation extends Model
     }
     public function sales(){
         return $this->hasMany(Sales::class,'quot_id','id');
+    }
+    public function paymentAllocations(){
+        return $this->hasMany(PaymentAllocation::class,'inv_id','id');
     }
 
     private static function gen(){

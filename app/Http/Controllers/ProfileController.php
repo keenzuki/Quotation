@@ -21,20 +21,30 @@ class ProfileController extends Controller
         ]);
     }
 
-    /**
+     /**
      * Update the user's profile information.
      */
     public function update(ProfileUpdateRequest $request): RedirectResponse
     {
-        $request->user()->fill($request->validated());
-
-        if ($request->user()->isDirty('email')) {
-            $request->user()->email_verified_at = null;
-        }
-
-        $request->user()->save();
-
-        return Redirect::route('profile.edit')->with('status', 'profile-updated');
+        
+        $user = auth()->user();
+        // $oldPhone=$user->phone;
+        $user->fname = $request->first_name;
+        $user->lname = $request->last_name;
+        $user->phone = $request->phone;
+        $user->save();
+        // if ($oldPhone !== $request->phone) {
+        //     // $code = User::generateCode(2);
+        //     // $user->update([
+        //     //     // 'phone_verified_at'=> null,
+        //     //     'verification_code'=>Hash::make($code)
+        //     // ]);
+        //     // Auth::logout();
+        //     // event(new NewUserRegistered($user->fname, $request->phone,$code));
+        //     // return Redirect::route('phoneverification',['phone'=>$request->phone])->with('success','NB: Only after verification you\'ll be able to use your new phone');
+        //     return Redirect::back()->with('success','Profile Updated successfully');
+        // }
+        return Redirect::route('profile.edit')->with('success', 'profile-updated successfully');
     }
 
     /**

@@ -11,16 +11,17 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('quotations', function (Blueprint $table) {
+        Schema::create('payments', function (Blueprint $table) {
             $table->id();
+            $table->string('reference')->unique()->nullable();
+            $table->decimal('amount',11,2);
+            $table->decimal('allocated',11,2)->default(0);
+            $table->string('mode');
+            $table->string('bank')->nullable();
+            $table->string('account')->nullable();
             $table->unsignedBigInteger('client_id');
-            $table->string('reference')->unique();
-            $table->string('title')->nullable();
-            $table->string('details')->nullable();
-            $table->decimal('cost',11,2)->default('0');
-            $table->integer('status')->default(0);
-            $table->decimal('paid_amount',11,2)->default('0');
-            $table->smallInteger('pay_status')->default(1);
+            $table->dateTime('paid_on')->default(now());
+            $table->smallInteger('status')->default(1);
             $table->timestamps();
 
             $table->foreign('client_id')->references('id')->on('clients');
@@ -32,6 +33,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('quotations');
+        Schema::dropIfExists('payments');
     }
 };

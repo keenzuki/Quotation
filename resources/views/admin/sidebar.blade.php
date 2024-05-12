@@ -1,15 +1,10 @@
 <style>
-    body {
-        width: 100vw;
-        margin-top: 60px;
-    }
-
     .sidebar {
         height: 100%;
         max-width: 280px;
         position: fixed;
         background-color: rgb(229, 236, 239);
-        top: 15px;
+        top: 8px;
         z-index: 1;
         overflow-y: hidden;
         max-height: calc(100% - 50px);
@@ -36,13 +31,19 @@
 
     @media (max-width: 992px) {
         #sidebar {
-            max-width: 100px
+            max-width: 200px
         }
     }
 
-    @media (max-width: 765px) {
+    @media (max-width: 768px) {
         #sidebar {
-            max-width: 100px
+            max-width: 200px
+        }
+    }
+
+    @media (max-width: 576px) {
+        #sidebar {
+            max-width: 200px
         }
     }
 
@@ -58,7 +59,7 @@
 
     .heading {
         font-weight: 620;
-        color: white
+        color: white;
     }
 
     i {
@@ -91,69 +92,65 @@
 </style>
 
 <body>
-    <nav id="sidebar" class="navbar sidebar d-md-inline navbar-expand border-end align-items-start mt-5 shadow-sm">
+    <nav id="sidebar"
+        class="navbar sidebar collapse d-sm-inline navbar-expand-sm border-end align-items-start mt-5 shadow-sm">
         <div id="main-menu" class="main-menu">
             <ul class="nav navbar-nav flex-column ms-1 mt-1">
                 <li class="nav-item">
                     <a href="{{ route('admin.dashboard') }}"
-                        class="nav-link {{ request()->routeIs('admin.dashboard') ? ' active' : '' }}">
+                        class="nav-link {{ request()->routeIs('dashboard') ? ' active' : '' }}">
                         <i class="bi bi-laptop fs-3" data-bs-toggle="tooltip" data-bs-placement="bottom"
                             title="Dashboard"></i>
-                        <span class="ms-4 nav-name d-none d-md-none d-lg-inline">Dashboard</span>
+                        <span class="ms-2 ms-md-4 nav-name d-none d-sm-inline">Dashboard</span>
                     </a>
                 </li>
-                <span class="heading">Parcels</span>
-                <hr class="text-black me-2">
-                {{-- <li class="nav-item">
-                    <a href="{{ route('admin.parcels.index') }}"
-                        class="nav-link {{ request()->routeIs('admin.parcels.index') ? ' active' : '' }}">
-                        <i class="bi bi-envelope fs-3" data-bs-toggle="tooltip" data-bs-placement="bottom"
-                            title="Parcels"></i>
-                        <span class="ms-4 nav-name d-none d-md-none d-lg-inline">All Parcels</span>
-                    </a>
-                </li> --}}
-                <span class="heading">Payments</span>
-                <hr class="text-black me-2">
-                {{-- <li class="nav-item">
-                    <a href="{{ route('admin.payments') }}"
-                        class="nav-link {{ request()->routeIs('admin.payments') ? ' active' : '' }}">
-                        <i class="bi bi-wallet2 fs-3" data-bs-toggle="tooltip" data-bs-placement="bottom"
-                            title="Payments"></i>
-                        <span class="ms-4 nav-name d-none d-md-none d-lg-inline">All Payments</span>
-                    </a>
-                </li> --}}
-                <span class="heading">Routes</span>
-                <hr class="text-black me-3">
-                {{-- <li class="nav-item">
-                    <a id="routes" href="{{ route('admin.routes.index') }}"
-                        class="nav-link {{ request()->routeIs('admin.routes.index') ? ' active' : '' }}">
-                        <i class="bi bi-sign-turn-right fs-3" data-bs-toggle="tooltip" data-bs-placement="bottom"
-                            title="Routes"></i>
-                        <span class="ms-4 nav-name d-none d-md-none d-lg-inline">All Routes</span>
-                    </a>
-                </li> --}}
-                <span class="heading">Users</span>
-                <hr class="text-black me-3">
+                <span class="heading ">Sales&nbsp;Rep</span>
+                <hr class="text-black me-2 my-1">
                 <li class="nav-item">
-                    <a id="routes" href="{{ route('admin.users') }}"
-                        class="nav-link {{ request()->routeIs('admin.users') ? ' active' : '' }}">
+                    <a href="{{ route('agent.clients') }}" class="nav-link">
                         <i class="bi bi-people fs-3" data-bs-toggle="tooltip" data-bs-placement="bottom"
-                            title="Users"></i>
-                        <span class="ms-4 nav-name d-none d-md-none d-lg-inline">All Users</span>
+                            title="Parcels"></i>
+                        <span class="ms-2 ms-md-4 nav-name d-none d-sm-inline">All Representatives</span>
                     </a>
                 </li>
-                <span class="heading">Vehicles</span>
-                <hr class="text-black me-3">
-                {{-- <li class="nav-item">
-                    <a id="routes" href="{{ route('admin.vehicles.index') }}"
-                        class="nav-link {{ request()->routeIs('admin.vehicles.index') ? ' active' : '' }}">
-                        <i class="bi bi-truck fs-3" data-bs-toggle="tooltip" data-bs-placement="bottom"
-                            title="Vehicles"></i>
-                        <span class="ms-4 nav-name d-none d-md-none d-lg-inline">All Vehicles</span>
+                <span class="heading ">Quotations</span>
+                <hr class="text-black me-2 my-1">
+                <li class="nav-item">
+                    <a href="{{ route('agent.quotations') }}" class="nav-link">
+                        <i class="bi bi-chat-quote fs-3" data-bs-toggle="tooltip" data-bs-placement="bottom"
+                            title="Parcels"></i>
+                        <span class="ms-2 ms-md-4 nav-name d-none d-sm-inline">My Quotations</span>
                     </a>
-                </li> --}}
+                </li>
+                <span class="heading ">Invoices</span>
+                <hr class="text-black me-2 my-1">
+                <li class="nav-item">
+                    <a href="{{ route('agent.invoices') }}" class="nav-link">
+                        <i class="bi bi-receipt fs-3" data-bs-toggle="tooltip" data-bs-placement="bottom"
+                            title="Parcels"></i>
+                        <span class="ms-2 ms-md-4 nav-name d-none d-sm-inline">My Invoices</span>
+                    </a>
+                </li>
+                <span class="heading ">Payments</span>
+                <hr class="text-black me-2 my-1">
+                <li class="nav-item">
+                    <a href="{{ route('agent.clients') }}" class="nav-link">
+                        <i class="bi bi-wallet2 fs-3" data-bs-toggle="tooltip" data-bs-placement="bottom"
+                            title="Parcels"></i>
+                        <span class="ms-2 ms-md-4 nav-name d-none d-sm-inline">My Payments</span>
+                    </a>
+                </li>
+                <span class="heading ">Items</span>
+                <hr class="text-black me-2 my-1">
+                <li class="nav-item">
+                    <a href="{{ route('agent.items') }}" class="nav-link">
+                        <i class="bi bi-diagram-3 fs-3" data-bs-toggle="tooltip" data-bs-placement="bottom"
+                            title="Parcels"></i>
+                        <span class="ms-2 ms-md-4 nav-name d-none d-sm-inline">All Items</span>
+                    </a>
+                </li>
                 <span class="heading">Reports</span>
-                <hr class="text-black me-3">
+                <hr class="text-black me-2 my-1">
                 {{-- <li class="nav-item">
                     <a href="{{ route('admin.routeperformance') }}" class="nav-link">
                         <i class="bi bi-sign-turn-right fs-3" data-bs-toggle="tooltip" data-bs-placement="bottom"

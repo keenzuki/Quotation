@@ -4,8 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Models\Client;
 use App\Models\Quotation;
+use App\Models\Payment;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Validation\Rule;
 
 class ClientController extends Controller
 {
@@ -57,10 +59,22 @@ class ClientController extends Controller
                             ->where('c.agent_id',$user->id);
                     })
                     ->where('q.client_id',$client->id)
-                    ->select('q.id','q.title','q.details','q.cost','q.created_at','q.reference','q.status')
+                    ->select('q.id','q.title','q.details','q.cost','q.created_at','q.reference','q.status','q.pay_status')
                     ->orderBy('q.id','DESC')
                     ->paginate(20);
-        return view('client_profile',compact(['client','quotations']));
+        $payments = Payment::from('payments as p')
+                    ->join('clients as c', function($join) use($user){
+                        $join->on('c.id','=','p.client_id')
+                            ->where('c.agent_id',$user->id);
+                    })
+                    ->where('p.client_id',$client->id)
+                    ->select('p.id','p.reference','p.amount','p.mode','p.paid_on as date','p.status',
+                        DB::raw("COALESCE(p.bank, 'N/A') as bank"),
+                        DB::raw("COALESCE(p.account, 'N/A') as account")
+                    )
+                    ->orderBy('p.paid_on','DESC')
+                    ->paginate(20);
+        return view('client_profile',compact(['client','payments','quotations']));
     }
 
     /**
@@ -71,12 +85,29 @@ class ClientController extends Controller
         //
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
     public function update(Request $request, Client $client)
     {
-        //
+        $request->validate([
+            'name'=>['required','regex:/^[a-zA-Z\s]+$/'],
+            'phone' => ['required','starts_with:0','min:10',Rule::unique('clients')->ignore($client->id)],
+            'email' => ['sometimes','email'],
+            'address' => ['required','regex:/^[a-zA-Z0-9\s]+$/']
+        ]);
+        $this->authorize('agentManageClient', $client);
+        try {
+            DB::beginTransaction();
+            $client->update([
+                'name'=> $request->name,
+                'phone' => $request->phone,
+                'address' => $request->address,
+                'email' => $request->email,
+            ]);
+            DB::commit();
+            return back()->with('success','Client profile updated succefully');
+        } catch (\Throwable $th) {
+            DB::rollBack();
+            return back()->with('error','Oops an error occured. Try again');
+        }
     }
 
     /**

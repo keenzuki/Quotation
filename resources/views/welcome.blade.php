@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <title>{{ env('APP_NAME') }}</title>
 
@@ -42,19 +42,19 @@
         }
 
         .logo {
-            width: 150px;
+            width: 350px;
             margin: auto;
         }
 
         .logo img {
-            width: 100%;
+            width: 80%;
             height: 80px;
-            object-fit: cover;
-            border-radius: 10%;
+            object-fit: fill;
             box-shadow: 0px 0px 3px #5f5f5f,
                 0px 0px 0px 5px #ecf0f3,
                 8px 8px 15px #a7aaa7,
                 -8px -8px 15px #fff;
+            padding: 3px;
         }
 
         .wrapper .name {
@@ -114,7 +114,7 @@
             color: #039BE5;
         }
 
-        @media(max-width: 380px) {
+        @media(max-width: 312px) {
             .wrapper {
                 margin: 30px 20px;
                 padding: 40px 15px 15px 15px;
@@ -127,7 +127,7 @@
     <div class="container d-flex justify-content-around align-items-center">
         <div class="wrapper">
             <div class="logo">
-                <img src="{{ asset('images/InspireLogo.jpg') }}" alt="">
+                <img src="{{ asset('images/InspireLogo.jpg') }}" class="img-fluid rounded" alt="" />
             </div>
             {{-- <div class="text-center mt-4 name">
                 InspireHub
