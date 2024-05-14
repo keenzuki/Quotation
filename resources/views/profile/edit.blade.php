@@ -20,7 +20,7 @@
                                 <img id="profilePhoto" src="{{ asset('images/profiles/' . $user->photo) }}" alt="no image"
                                     style="width: 140px; height: 140px; border-radius: 100%; object-fit:cover; overflow:hidden;">
                             </label>
-                            <span class="fw-bold fs-5">{{ $user->fname }}</span>
+                            <span class="fw-bold fs-5">{{ $user->role->name }}</span>
                         </div>
                         <input type="file" class="form-control " id="imageInput" name="image" style="display:none">
                     </div>
@@ -49,10 +49,10 @@
 
                         <div class="row mb-4">
                             <div class="col-sm-6 mb-2">
-                                <label for="role">Role:</label>
-                                <input value="{{ old('role', $user->role->name) }}" type="text" class="form-control"
-                                    id="role" disabled>
-                                @error('role')
+                                <label for="email">Email:</label>
+                                <input value="{{ old('email', $user->email) }}" type="email" class="form-control"
+                                    id="email" disabled>
+                                @error('email')
                                     <span class="text-danger">{{ $message }}</span>
                                 @enderror
                             </div>

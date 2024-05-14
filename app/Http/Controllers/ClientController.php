@@ -103,7 +103,7 @@ class ClientController extends Controller
                 'email' => $request->email,
             ]);
             DB::commit();
-            return back()->with('success','Client profile updated succefully');
+            return back()->with('success','Client profile updated successfully');
         } catch (\Throwable $th) {
             DB::rollBack();
             return back()->with('error','Oops an error occured. Try again');

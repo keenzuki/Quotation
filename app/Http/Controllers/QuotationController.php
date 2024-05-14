@@ -32,6 +32,17 @@ class QuotationController extends Controller
         $this->authorize('agentManageClient',$client);
         return view('view_quotation',compact(['quotation']));
     }
+    // public function processInvoice(Quotation $invoice){
+    //     $client = $invoice->client;
+    //     dd($invoice);
+    //     $this->authorize('agentManageClient', $client);
+    //     try {
+    //         dispatch(new PaymentProcessing($client));
+    //         return back()->with('success','Processed successfully');
+    //     } catch (\Throwable $th) {
+    //         return back()->with('error','Sorry an error occured');
+    //     }
+    // }
     public function create(Client $client)
     {
         return view('create_quotation',compact(['client']));
@@ -93,9 +104,12 @@ class QuotationController extends Controller
     public function updateQuotation2Invoice(Quotation $quotation){
         $client = $quotation->client;
         $this->authorize('agentManageClient', $client);
+        $staticPart = substr($quotation->reference,3); // Remove 'Q' for quotation add 'I' for Invoice
+        $ref = 'IHI'.$staticPart;
         try {
             DB::beginTransaction();
             $quotation->update([
+                'reference' => $ref, // Update reference
                 'status' => 3 //Invoice status code
             ]);
             dispatch(new PaymentProcessing($client));
@@ -291,7 +305,9 @@ class QuotationController extends Controller
         return view('edit_invoice',compact(['invoice']));
     }
     public function updateInvoice(Request $request,Quotation $invoice){
-        // dd($request);
+        if ($invoice->paymentAllocations()->count() > 0) {
+            return back()->with('error','This invoice has payments already');
+        }
         $request->validate([
             'items.*' => 'required',
             'quantities.*' => 'required|min:1',
@@ -350,15 +366,21 @@ class QuotationController extends Controller
         $quotation->delete();
         return back()->with('success',$category.' Erased Successfully');
     }
+    public function destroyInvoice(Quotation $invoice)
+    {
+        $client = $invoice->client;
+        $this->authorize('agentManageClient', $client);
+        // dd($invoice->paymentAllocations()->count());
+        if($invoice->paymentAllocations()->count()>0){
+            return back()->with('error','Can\'t delete invoice as it has been paid for. Contact admin 👋');
+        }
+        foreach ($invoice->sales as $key => $sale) {
+            $sale->delete();
+        }
+        $invoice->delete();
+        return back()->with('success','Invoice Erased Successfully');
+    }
 
-
-    // public function invoicePdf(Quotation $invoice)
-    // {
-    //     $sales = Sales::where('quot_id',$invoice->id)->get();
-    //     $data = ['invoice' => $invoice,'sales'=>$sales];
-    //     $pdf = PDF::loadView('reports.invoice_pdf', compact('invoice','sales'));
-    //     return $pdf->download('document.pdf');
-    // }
     public function invoicePdf(Quotation $invoice)
     { 
         $sales = Sales::where('quot_id',$invoice->id)->get();
@@ -372,13 +394,17 @@ class QuotationController extends Controller
                 ->where('client_id',$client->id)
                 ->select(
                     DB::raw("COALESCE(p.reference , 'N/A') as reference"),
+                    'p.sys_ref',
                     'p.mode',
                     'p.paid_on as date',
                     'pa.allocated as amount'
                 )
                 ->get();
         $title = "customer invoice";
-        $pdf = PDF::loadView('reports.invoice_pdf',compact(['invoice','client','sales','title','payments']));
+        $type = "Invoice";
+        $date = $invoice->created_at;
+        $reference = $invoice->reference;
+        $pdf = PDF::loadView('reports.invoice_pdf',compact(['invoice','client','sales','title','payments','type','date','reference']));
         $pdf->setPaper("a4", "portrait");
         $pdfname= 'invoice-'.$invoice->reference.'.pdf';
         $doc = $pdf->stream($pdfname);
@@ -387,23 +413,12 @@ class QuotationController extends Controller
     public function quotationPdf(Quotation $quotation)
     { 
         $sales = Sales::where('quot_id',$quotation->id)->get();
-        // $data = ['invoice' => $quotation,'sales'=>$sales];
         $client= $quotation->client;
-        // $payments = Payment::from('payments as p')
-        //         ->join('payment_allocations as pa', function($join) use($quotation){
-        //             $join->on('pa.pay_id','p.id')
-        //             ->where('pa.inv_id',$quotation->id);
-        //         })
-        //         ->where('client_id',$client->id)
-        //         ->select(
-        //             DB::raw("COALESCE(p.reference , 'N/A') as reference"),
-        //             'p.mode',
-        //             'p.paid_on as date',
-        //             'pa.allocated as amount'
-        //         )
-        //         ->get();
-        $title = "customer invoice";
-        $pdf = PDF::loadView('reports.quotation_pdf',compact(['quotation','client','sales','title']));
+        $title = "quotation";
+        $type = "Quotation";
+        $date = $quotation->created_at;
+        $reference = $quotation->reference;
+        $pdf = PDF::loadView('reports.quotation_pdf',compact(['quotation','client','sales','title','type','date','reference']));
         $pdf->setPaper("a4", "portrait");
         $pdfname= 'invoice-'.$quotation->reference.'.pdf';
         $doc = $pdf->stream($pdfname);

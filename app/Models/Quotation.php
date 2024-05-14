@@ -9,7 +9,7 @@ class Quotation extends Model
 {
     use HasFactory;
     static function genref(){
-        return strtoupper('IH'.date('yW').self::gen());
+        return strtoupper('IHQ'.date('yW').self::gen());
     }
     protected $fillable =[
         'reference',

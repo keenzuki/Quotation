@@ -29,6 +29,7 @@ class PaymentProcessing implements ShouldQueue
     {
         $payments = Payment::where('client_id', $this->client->id)
                     ->where('status','!=',3)
+                    ->where('processed',true)
                     ->orderBy('id','ASC')   
                     ->get();
         foreach ($payments as $payment) {

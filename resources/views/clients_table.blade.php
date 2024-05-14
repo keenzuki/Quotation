@@ -17,27 +17,12 @@
                     <td>{{ $client->phone }}</td>
                     <td>{{ $client->address }}</td>
                     <td>
-                        <div class="dropdown open">
-                            <button class="btn btn-primary btn-sm dropdown-toggle" type="button" id="triggerId"
-                                data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                Action
-                            </button>
-                            <div class="dropdown-menu" aria-labelledby="triggerId">
-                                <a class="dropdown-item"
-                                    href="{{ route('agent.clientprofile', ['client' => $client->id]) }}">profile</a>
-                                {{-- <a class="dropdown-item"
-                                    href="{{ route('agent.createquotation', ['client' => $client->id]) }}">Make
-                                    Quotation</a> --}}
-                                <div class="dropdown-divider"></div>
-                                <a class="dropdown-item" href="#">After divider action</a>
-                            </div>
-                        </div>
-
-
+                        <a class="btn btn-primary"
+                            href="{{ route('agent.clientprofile', ['client' => $client->id]) }}">profile</a>
                     </td>
                 </tr>
             @empty
-                <td class="text-center text-info">No data available</td>
+                <td colspan="5" class="text-center text-info">No data available</td>
             @endforelse
         </tbody>
         <tfoot>

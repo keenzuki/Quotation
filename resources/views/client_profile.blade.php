@@ -79,7 +79,6 @@
                                 <th>#</th>
                                 <th>Ref</th>
                                 <th>Project/Activity</th>
-                                <th>Details</th>
                                 <th>Price</th>
                                 <th>Payment</th>
                                 <th>Date</th>
@@ -91,11 +90,9 @@
                                 <tr class="table-primary">
                                     <td>{{ ($quotations->currentPage() - 1) * $quotations->perPage() + $loop->iteration }}
                                     </td>
-                                    <td><a class="text-decoration-none"
-                                            href="{{ route('agent.viewquotation', ['quotation' => $quotation->id]) }}">{{ $quotation->reference }}</a>
+                                    <td><a class="text-decoration-none" href="">{{ $quotation->reference }}</a>
                                     </td>
                                     <td>{{ $quotation->title }}</td>
-                                    <td>{!! nl2br(e($quotation->details)) !!}</td>
                                     <td>{{ $quotation->cost }}</td>
                                     <td>
                                         @if ($quotation->pay_status == 1)
@@ -186,17 +183,10 @@
                                                         href="{{ route('agent.editinvoice', ['invoice' => $quotation->id]) }}"><i
                                                             class="bi bi-pencil-square text-info"></i> Edit
                                                         Invoice</a>
-                                                    {{-- <hr>
-                                                            <form class="dropdown-item"
-                                                                action="{{ route('agent.deletequotation', ['quotation' => $quotation->id]) }}"
-                                                                method="post">
-                                                                @csrf
-                                                                @method('DELETE')
-                                                                <button class="text-danger" type="submit"
-                                                                    onclick="return confirm('Please Confrrm you want to delete the draft')"><i
-                                                                        class="bi bi-trash text-danger"></i>
-                                                                    Delete</button> --}}
-                                                    </form>
+                                                    {{-- <a class="dropdown-item"
+                                                        href="{{ route('agent.processinvoice', ['invoice' => $quotation->id]) }}"><i
+                                                            class="fs-5 bi bi-check-circle text-info"></i>
+                                                        Process Invoice</a> --}}
                                                 </div>
                                             @endif
 
@@ -204,7 +194,7 @@
                                     </td>
                                 </tr>
                             @empty
-                                <td colspan="4" class="text-info">No data available</td>
+                                <td colspan="7" class="text-info text-center">No data available</td>
                             @endforelse
                         </tbody>
                         <tfoot>
@@ -229,6 +219,7 @@
                                 <th>Amount</th>
                                 <th>Status</th>
                                 <th>Date</th>
+                                <th>Action</th>
                             </tr>
                         </thead>
                         <tbody class="table-group-divider overflow-auto" style="width: 50vh;">
@@ -254,98 +245,49 @@
                                         @endif
                                     </td>
                                     <td>{{ \Carbon\Carbon::parse($payment->created_at)->format('D d M, Y') }}</td>
+
                                     <td>
-                                        {{-- <div class="dropdown open">
+                                        <button class="btn btn-primary btn-sm dropdown-toggle" type="button"
+                                            id="triggerId" data-bs-toggle="dropdown" aria-haspopup="true"
+                                            aria-expanded="false">
+                                            Action
+                                        </button>
+                                        <div class="dropdown-menu dropdown-menu-end" aria-labelledby="triggerId">
+                                            {{-- <button type="button" class="dropdown-item" data-bs-toggle="modal"
+                                                data-bs-target="#paymentDetails">
+                                                <i class="fs-5 bi bi-eye text-success"></i> view Payment
+                                            </button> --}}
+                                            <button type="button" class="dropdown-item view-payment-btn"
+                                                data-payment-id="{{ $payment->id }}">
+                                                <i class="fs-5 bi bi-eye text-success"></i> View Payment
+                                            </button>
 
-                                                @if ($payment->status == 1)
-                                                    <button class="btn btn-warning btn-sm dropdown-toggle" type="button"
-                                                        id="triggerId" data-bs-toggle="dropdown" aria-haspopup="true"
-                                                        aria-expanded="false">
-                                                        Draft
-                                                    </button>
-                                                    <div class="dropdown-menu dropdown-menu-end"
-                                                        aria-labelledby="triggerId">
-                                                        <a class="dropdown-item text-primary"
-                                                            href="{{ route('agent.editdraft', ['quotation' => $quotation->id]) }}"><i
-                                                                class="bi bi-check-circle text-primary"></i> Complete</a>
-                                                        <hr>
-                                                        <form class="dropdown-item"
-                                                            action="{{ route('agent.deletequotation', ['quotation' => $quotation->id]) }}"
-                                                            method="post">
-                                                            @csrf
-                                                            @method('DELETE')
-                                                            <button class="text-danger" type="submit"
-                                                                onclick="return confirm('Please Confrrm you want to delete the draft')"><i
-                                                                    class="bi bi-trash text-danger"></i>
-                                                                Delete</button>
-                                                        </form>
-                                                    </div>
-                                                @elseif ($payment->status == 2)
-                                                    <button class="btn btn-primary btn-sm dropdown-toggle" type="button"
-                                                        id="triggerId" data-bs-toggle="dropdown" aria-haspopup="true"
-                                                        aria-expanded="false">
-                                                        Quotation
-                                                    </button>
-                                                    <div class="dropdown-menu dropdown-menu-end"
-                                                        aria-labelledby="triggerId">
-                                                        <a class="dropdown-item text-success"
-                                                            href="{{ route('agent.updateQ2I', ['quotation' => $quotation->id]) }}"
-                                                            onclick="return confirm('Do you really want to convert this Quotation to Invoice direct?')"><i
-                                                                class="bi bi-pen text-success"></i> Make
-                                                            Invoice</a>
-                                                        <a class="dropdown-item text-info"
-                                                            href="{{ route('agent.editquotation', ['quotation' => $quotation->id]) }}"><i
-                                                                class="bi bi-pencil-square text-info"></i> Edit
-                                                            Quotation</a>
-                                                        <hr>
-                                                        <form class="dropdown-item"
-                                                            action="{{ route('agent.deletequotation', ['quotation' => $quotation->id]) }}"
-                                                            method="post">
-                                                            @csrf
-                                                            @method('DELETE')
-                                                            <button class="text-danger" type="submit"
-                                                                onclick="return confirm('Please Confrrm you want to delete the draft')"><i
-                                                                    class="bi bi-trash text-danger"></i>
-                                                                Delete</button>
-                                                        </form>
-                                                    </div>
-                                                @elseif ($payment->status == 3)
-                                                    <button class="btn btn-success btn-sm dropdown-toggle" type="button"
-                                                        id="triggerId" data-bs-toggle="dropdown" aria-haspopup="true"
-                                                        aria-expanded="false">
-                                                        Invoice
-                                                    </button>
-                                                    <div class="dropdown-menu dropdown-menu-end"
-                                                        aria-labelledby="triggerId">
-                                                        <a class="dropdown-item text-success"
-                                                            href="{{ route('agent.invoicepdf', ['invoice' => $quotation->id]) }}"><i
-                                                                class="bi bi-pen text-success"></i> View
-                                                            Invoice</a>
-                                                        <a href="{{ route('agent.invoicepdf', ['invoice' => $invoice->id]) }}"
-                                                            class="btn btn-success"><i
-                                                                class="bi bi-filetype-pdf mr-1"></i>PDF</a>
-                                                        <a class="dropdown-item text-info"
-                                                            href="{{ route('agent.editinvoice', ['invoice' => $quotation->id]) }}"><i
-                                                                class="bi bi-pencil-square text-info"></i> Edit
-                                                            Invoice</a>
-                                                        <hr>
-                                                        <form class="dropdown-item"
-                                                            action="{{ route('agent.deletequotation', ['quotation' => $quotation->id]) }}"
-                                                            method="post">
-                                                            @csrf
-                                                            @method('DELETE')
-                                                            <button class="text-danger" type="submit"
-                                                                onclick="return confirm('Please Confrrm you want to delete the draft')"><i
-                                                                    class="bi bi-trash text-danger"></i>
-                                                                Delete</button>
-                                                    </div>
-                                                @endif
-
-                                            </div> --}}
+                                            <button type="button" class="dropdown-item edit-payment-btn"
+                                                data-editpayment-id="{{ $payment->id }}">
+                                                <i class="fs-5 bi bi-pencil-square text-success"></i> Edit Payment
+                                            </button>
+                                            @if ($payment->status == 1)
+                                                <a class="dropdown-item"
+                                                    href="{{ route('agent.processpayment', ['payment' => $payment->id]) }}"><i
+                                                        class="fs-5 bi bi-check-circle text-info"></i>
+                                                    Process Payment</a>
+                                            @endif
+                                            @if ($payment->status == 1)
+                                                <hr>
+                                                <form class="dropdown-item" action="" method="post">
+                                                    @csrf
+                                                    @method('DELETE')
+                                                    <button class="text-danger" type="submit"
+                                                        onclick="return confirm('Please Confirm you want to delete the draft')"><i
+                                                            class="fs-5 bi bi-trash text-danger"></i>
+                                                        Delete Payment</button>
+                                                </form>
+                                            @endif
+                                        </div>
                                     </td>
                                 </tr>
                             @empty
-                                <td colspan="4" class="text-info">No data available</td>
+                                <td colspan="9" class="text-center text-info">No data available</td>
                             @endforelse
                         </tbody>
                         <tfoot>
@@ -374,21 +316,33 @@
                                 <label for="name">Full name</label>
                                 <input value="{{ $client->name }}" type="text" name="name" class="form-control"
                                     id="name">
+                                @error('name')
+                                    <span class="text-danger">{{ $message }}</span>
+                                @enderror
                             </div>
                             <div class="col-6">
                                 <label for="phone">Phone</label>
                                 <input value="{{ $client->phone }}" type="text" name="phone" class="form-control"
                                     id="phone">
+                                @error('phone')
+                                    <span class="text-danger">{{ $message }}</span>
+                                @enderror
                             </div>
                             <div class="col-6">
                                 <label for="email">Email</label>
                                 <input value="{{ $client->email }}" type="text" name="email" class="form-control"
                                     id="email">
+                                @error('email')
+                                    <span class="text-danger">{{ $message }}</span>
+                                @enderror
                             </div>
                             <div class="col-6">
                                 <label for="address">Address</label>
                                 <input value="{{ $client->address }}" type="text" name="address"
                                     class="form-control" id="address">
+                                @error('address')
+                                    <span class="text-danger">{{ $message }}</span>
+                                @enderror
                             </div>
                             <div class="col-12 text-center mt-2">
                                 <button type="submit" class="btn btn-primary">Update</button>
@@ -397,9 +351,6 @@
 
                     </form>
                 </div>
-                {{-- <div class="modal-footer">
-                <button type="button" class="btn btn-primary">Understood</button>
-            </div> --}}
             </div>
         </div>
     </div>
@@ -464,6 +415,110 @@
             </div>
         </div>
     </div>
+    <div class="modal fade" id="paymentDetails" data-bs-keyboard="false" tabindex="-1"
+        aria-labelledby="staticBackdropLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="staticBackdropLabel">Payment Details</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-12">
+                            <p style="font-weight: bold;" class="text-bold">Payment Date: <span
+                                    style="font-weight: normal;" id="paymentDate">....</span>
+                            </p>
+                        </div>
+                        <div class="col-12 col-sm-6">
+                            <p style="font-weight: bold;" class="text-bold">Client: <span style="font-weight: normal;"
+                                    id="clientName">....</span></p>
+                            <p style="font-weight: bold;" class="text-bold">Reciept No: <span
+                                    style="font-weight: normal;" id="receiptNo">....</span></p>
+                            <p style="font-weight: bold;" class="text-bold">Reference: <span style="font-weight: normal;"
+                                    id="referenceNo">....</span>
+                            </p>
+
+                        </div>
+                        <div class="col-12 col-sm-6">
+                            <p style="font-weight: bold;" class="text-bold">Mode: <span style="font-weight: normal;"
+                                    id="paymentMode">....</span></p>
+                            <p style="font-weight: bold;" class="text-bold">Amount: <span style="font-weight: normal;"
+                                    id="paymentAmount">....</span></p>
+                            <p style="font-weight: bold;" class="text-bold">status: <span class="badge"
+                                    style="font-weight: normal;" id="paymentStatus">....</span></p>
+                        </div>
+                        <div class="col-12">
+                            <div class="row">
+                                <div class="col-6 col-sm-6">
+                                    <p style="font-weight: bold;" class="text-bold">Bank: <span
+                                            style="font-weight: normal;" id="bankname">....</span></p>
+                                </div>
+                                <div class="col-6 col-sm-6">
+                                    <p style="font-weight: bold;" class="text-bold">Account: <span
+                                            style="font-weight: normal;" id="accountnumber">....</span></p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="editPaymentDetails" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+        aria-labelledby="clientName" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="clientNameEdit">....</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="editpaymentdetailsform">
+                        @csrf
+                        <div class="row">
+                            <div class="col-12 col-sm-6">
+                                <label for="phone">Receipt Number</label>
+                                <input readonly type="text" name="phone" class="form-control"
+                                    id="clientreceiptnoinput">
+                            </div>
+                            <div class="col-12 col-sm-6">
+                                <label for="clientmodeinput">Mode</label>
+                                <input readonly type="text" name="mode" class="form-control" id="clientmodeinput">
+                            </div>
+                            <div class="col-12 col-sm-6">
+                                <label for="clientreferenceinput">Reference</label>
+                                <input type="text" name="reference" class="form-control" id="clientreferenceinput">
+                            </div>
+                            <div class="col-12 col-sm-6">
+                                <label for="clientamountinput">Amount</label>
+                                <input type="text" name="amount" class="form-control" id="clientamountinput">
+                            </div>
+                            <div class="col-12" id="bankinputfields">
+                                <div class="row">
+                                    <div class="col-12 col-sm-6">
+                                        <label for="clientbankinput">Bank Name</label>
+                                        <input type="text" name="bank_name" class="form-control"
+                                            id="clientbankinput">
+                                    </div>
+                                    <div class="col-12 col-sm-6">
+                                        <label for="clientaccountinput">Account</label>
+                                        <input type="text" name="account_no" class="form-control"
+                                            id="clientaccountinput">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-12 text-center mt-2">
+                                <button type="submit" id="submitbtn" class="btn btn-primary">Update</button>
+                            </div>
+                        </div>
+                    </form>
+                    <div id="validationErrors" class="text-danger"></div>
+                </div>
+            </div>
+        </div>
+    </div>
     <script>
         // jQuery code to show/hide fields based on selected payment mode
         $(document).ready(function() {
@@ -481,6 +536,99 @@
                 } else {
                     $('#reference_fields').hide();
                 }
+            });
+            $('.view-payment-btn').click(function() {
+                var paymentId = $(this).data('payment-id');
+                $.ajax({
+                    url: "{{ route('agent.showpayment', ['payment' => ':paymentId']) }}".replace(
+                        ':paymentId', paymentId),
+                    type: 'GET',
+                    success: function(response) {
+                        // Populate the modal with the fetched response
+                        $('#clientName').text(response.client);
+                        $('#receiptNo').text(response.sys_ref);
+                        $('#referenceNo').text(response.reference);
+                        $('#paymentMode').text(response.mode);
+                        $('#paymentAmount').text(response.amount);
+                        $('#paymentStatus').text(response.status);
+                        $('#paymentDate').text(response.date);
+                        $('#bankname').text(response.bank_name);
+                        $('#accountnumber').text(response.account_no);
+                        $('#paymentStatus').removeClass('bg-danger bg-warning bg-success');
+                        if (response.status == 'Unallocated') {
+                            $('#paymentStatus').addClass('bg-danger');
+                        } else if (response.status == 'Partially Allocated') {
+                            $('#paymentStatus').addClass('bg-warning');
+                        } else if (response.status == 'Fully Allocated') {
+                            $('#paymentStatus').addClass('bg-success');
+                        }
+                        // Open the modal after successful AJAX request
+                        $('#paymentDetails').modal('show');
+                    },
+                    error: function() {
+                        alert('Failed to fetch payment details');
+                    }
+                });
+            });
+            $('.edit-payment-btn').click(function() {
+                var paymentID = $(this).data('editpayment-id');
+                $.ajax({
+                    url: "{{ route('agent.showpayment', ['payment' => ':paymentId']) }}".replace(
+                        ':paymentId', paymentID),
+                    type: 'GET',
+                    success: function(response) {
+                        $('#clientNameEdit').text(response.client);
+                        $('#clientreceiptnoinput').val(response.sys_ref);
+                        $('#clientmodeinput').val(response.mode);
+                        $('#clientreferenceinput').val(response.reference);
+                        $('#clientamountinput').val(response.amount);
+                        // Assuming response contains bank name and account number
+                        $('#clientbankinput').val(response.bank_name);
+                        $('#clientaccountinput').val(response.account_no);
+                        $('#bankinputfields').hide();
+                        if (response.mode != 'cash') {
+                            $('#bankinputfields').show();
+                        }
+                        $('#editpaymentdetailsform').data('payment-id', paymentID);
+                        // Open the modal after successful AJAX request
+                        $('#editPaymentDetails').modal('show');
+                    },
+                    error: function() {
+                        alert('Failed to fetch payment details');
+                    }
+                });
+            });
+
+            $('#submitbtn').click(function(event) {
+                event.preventDefault(); // Prevent the default form submission
+                var formData = $('#editpaymentdetailsform').serialize();
+                var paymentID = $('#editpaymentdetailsform').data('payment-id');
+                console.log(formData);
+                console.log(paymentID);
+
+                $.ajax({
+                    url: "{{ route('agent.updatepayment', ['payment' => ':paymentId']) }}".replace(
+                        ':paymentId', paymentID),
+                    type: 'POST',
+                    data: formData, // Send the serialized form data
+                    success: function(response) {
+                        console.log(response);
+                        // Check if the update was successful
+                        if (response.success) {
+                            // If successful, close the modal
+                            $('#editPaymentDetails').modal('hide');
+                            // Optionally, you can reload the page or update the UI
+                            location.reload(); // Reload the page
+                        } else {
+                            // Assuming you have an element with ID 'validationErrors' in your modal
+                            $('#validationErrors').html(response.errors);
+                        }
+                    },
+                    error: function(error) {
+                        // alert('Failed to update payment');
+                        console.log(error);
+                    }
+                });
             });
         });
     </script>

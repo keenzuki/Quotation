@@ -30,7 +30,7 @@ Route::get('/', function () {
 //     return view('dashboard');
 // })->middleware(['auth', 'verified'])->name('dashboard');
 
-Route::get('/dashboard',[PageController::class,'dashboard'])->middleware(['auth', 'verified'])->name('dashboard');
+Route::get('/dashboard',[PageController::class,'dashboard'])->middleware(['auth'])->name('dashboard');
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
@@ -45,6 +45,10 @@ Route::middleware('agent')->prefix('agent')->name('agent.')->group(function(){
     Route::post('client/register',[ClientController::class,'store'])->name('registerclient');
     Route::put('client/update/{client}',[ClientController::class,'update'])->name('updateclient');
     Route::post('client/store-payment/{client}',[PaymentController::class,'store'])->name('addpayment');
+    Route::get('payments',[PaymentController::class,'index'])->name('payments');
+    Route::get('payments/show/{payment}',[PaymentController::class,'show'])->name('showpayment');
+    Route::post('payments/update/{payment}',[PaymentController::class,'update'])->name('updatepayment');
+    Route::get('payment-processing/{payment}',[PaymentController::class,'processPayment'])->name('processpayment');
   
     Route::get('items',[SalesController::class,'index'])->name('items');
    
@@ -71,6 +75,7 @@ Route::middleware('agent')->prefix('agent')->name('agent.')->group(function(){
         Route::get('invoice/{invoice}/pdf','invoicePdf')->name('invoicepdf');
         Route::get('quotation/{quotation}/pdf','quotationPdf')->name('quotationpdf');
         Route::post('client/update-invoice/{invoice}','updateInvoice')->name('updateinvoice');
+        // Route::get('invoice-processing','processInvoice')->name('processinvoice');
 
     });
     

@@ -61,7 +61,7 @@
 
         .table tfoot tr td h5 {
             margin: 1px;
-            font-size: 20px;
+            /* font-size: 20px; */
         }
 
         .table tfoot td:first-child {
@@ -84,6 +84,16 @@
         table #noPayment {
             font-size: 18px;
             text-align: center;
+        }
+
+        #pdfFooter .col p,
+        #pdfFooter .col h4 {
+            padding: 1px;
+            margin: 1px;
+        }
+
+        #pdfFooter .col {
+            padding: 10px;
         }
     </style>
 </head>
@@ -108,9 +118,9 @@
                 {{-- <p>{{ $client->address }}</p> --}}
             </td>
             <td style="max-width: 50px; vertical-align: top; overflow-wrap: break-word; text-align:right;">
-                <span>Invoice Details</span>
-                <p><small>Ref: </small>{{ $quotation->reference }}</p>
-                <p>Date: {{ \Carbon\Carbon::parse($quotation->created_at)->format('D d M, Y') }}</p>
+                <span>{{ $type }} Details</span>
+                <p><small>Ref: </small>{{ $reference }}</p>
+                <p>Date: {{ \Carbon\Carbon::parse($date)->format('D d M, Y') }}</p>
             </td>
         </tr>
     </table>

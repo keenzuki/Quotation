@@ -36,13 +36,13 @@ class AuthenticatedSessionController extends Controller
     // dd($loginField);
         if (Auth::attempt([$loginField => $credentials['identifier'], 'password' => $credentials['password']])) {
             // Authentication passed
-            return redirect()->intended('dashboard');
+            return redirect()->route('dashboard');
         }
     
         // Authentication failed
-        return back()->withErrors([
-            'error' => 'These credentials do not match our records.',
-        ]);
+        return back()->with(
+            'error','These credentials do not match our records'
+        );
     }
 
     /**

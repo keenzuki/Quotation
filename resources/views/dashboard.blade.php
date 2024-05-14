@@ -3,7 +3,7 @@
     <div class="col content">
         <nav aria-label="breadcrumb">
             <ol class="breadcrumb">
-                <li class="breadcrumb-item active" aria-current="page">Dashboard</li>
+                <li class="breadcrumb-item active" aria-current="page">Welcome back {{ Auth::user()->lname }}</li>
             </ol>
         </nav>
         <div class="row">
@@ -14,7 +14,7 @@
                             Drafts
                         </div>
                         <div class="card-body">
-                            <p class="fs-3"><i class="bi bi-envelope px-2"></i> {{ $p->drafts }}</p>
+                            <p class="fs-3"><i class="bi bi-hourglass-split px-2"></i> {{ $p->drafts }}</p>
                         </div>
                     </div>
                 </a>
@@ -26,7 +26,7 @@
                             Quotations
                         </div>
                         <div class="card-body">
-                            <p class="fs-3"><i class="bi bi-envelope px-2"></i> {{ $p->quotations }}</p>
+                            <p class="fs-3"><i class="bi bi-chat-quote px-2"></i> {{ $p->quotations }}</p>
                         </div>
                     </div>
                 </a>
@@ -38,7 +38,7 @@
                             Invoices
                         </div>
                         <div class="card-body">
-                            <p class="fs-3"><i class="bi bi-envelope px-2"></i> {{ $p->invoices }}</p>
+                            <p class="fs-3"><i class="bi bi-receipt px-2"></i> {{ $p->invoices }}</p>
                         </div>
                     </div>
                 </a>

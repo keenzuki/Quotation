@@ -13,6 +13,7 @@ return new class extends Migration
     {
         Schema::create('payments', function (Blueprint $table) {
             $table->id();
+            $table->string('sys_ref')->unique()->nullable();
             $table->string('reference')->unique()->nullable();
             $table->decimal('amount',11,2);
             $table->decimal('allocated',11,2)->default(0);
@@ -21,6 +22,7 @@ return new class extends Migration
             $table->string('account')->nullable();
             $table->unsignedBigInteger('client_id');
             $table->dateTime('paid_on')->default(now());
+            $table->boolean('processed')->default(false);
             $table->smallInteger('status')->default(1);
             $table->timestamps();
 

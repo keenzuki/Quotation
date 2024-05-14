@@ -55,7 +55,7 @@
         @else
             {{-- <div class="container-xxl bg-white p-0"> --}}
             @include('layouts.navigation')
-            @include('Components.success')
+            @include('components.success')
             <div class="container-fluid">
                 <div class="row flex-nowrap">
                     @include('layouts.sidebar')
