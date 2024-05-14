@@ -2,4 +2,25 @@
 deployment:
   tasks:
     - export DEPLOYPATH=/home/inspteaq/portal.inspirehub.co.ke
-    - /bin/cp -R Quotation $DEPLOYPATH
+    - /bin/cp -R app $DEPLOYPATH
+    - /bin/cp -R config $DEPLOYPATH
+    - /bin/cp -R database $DEPLOYPATH
+    - /bin/cp -R public $DEPLOYPATH
+    - /bin/cp -R resources $DEPLOYPATH
+    - /bin/cp -R routes $DEPLOYPATH
+    - /bin/cp -R storage $DEPLOYPATH
+    - /bin/cp -R tests $DEPLOYPATH
+    - /bin/cp -R vendor $DEPLOYPATH
+    - /bin/cp -R .cpanel.yml $DEPLOYPATH
+    - /bin/cp -R .editorconfig $DEPLOYPATH
+    - /bin/cp -R .env.example $DEPLOYPATH
+    - /bin/cp -R artisan $DEPLOYPATH
+    - /bin/cp -R composer.json $DEPLOYPATH
+    - /bin/cp -R composer.lock $DEPLOYPATH
+    - /bin/cp -R package-lock.json $DEPLOYPATH
+    - /bin/cp -R package.json $DEPLOYPATH
+    - /bin/cp -R phpunit.xml $DEPLOYPATH
+    - /bin/cp -R postcss.config.js $DEPLOYPATH
+    - /bin/cp -R README.md $DEPLOYPATH
+    - /bin/cp -R tailwind.config.js $DEPLOYPATH
+    - /bin/cp -R vite.config.js $DEPLOYPATH
