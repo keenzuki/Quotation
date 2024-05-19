@@ -15,6 +15,6 @@ class ClientPolicy
         //
     }
     public function agentManageClient(User $user, Client $client){
-        return $user->id === $client->agent_id;
+        return $user->id === $client->agent_id || $user->is_admin;
     }
 }

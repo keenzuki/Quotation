@@ -81,7 +81,7 @@
                 <div class="d-flex justify-content-around py-2">
                     {{-- <button class="btn btn-primary">Print</button> --}}
                     <button class="btn btn-primary"><i class="bi bi-envelope-at mr-1"></i> Email</button>
-                    <a href="{{ route('agent.invoicepdf', ['invoice' => $invoice->id]) }}" class="btn btn-success"><i
+                    <a href="{{ route('invoicepdf', ['invoice' => $invoice->id]) }}" class="btn btn-success"><i
                             class="bi bi-filetype-pdf mr-1"></i>PDF</a>
                 </div>
             </div>

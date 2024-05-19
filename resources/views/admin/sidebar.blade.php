@@ -107,7 +107,7 @@
                 <span class="heading ">Sales&nbsp;Rep</span>
                 <hr class="text-black me-2 my-1">
                 <li class="nav-item">
-                    <a href="{{ route('agent.clients') }}" class="nav-link">
+                    <a href="{{ route('admin.salesreps') }}" class="nav-link">
                         <i class="bi bi-people fs-3" data-bs-toggle="tooltip" data-bs-placement="bottom"
                             title="Parcels"></i>
                         <span class="ms-2 ms-md-4 nav-name d-none d-sm-inline">All Representatives</span>
@@ -116,19 +116,19 @@
                 <span class="heading ">Quotations</span>
                 <hr class="text-black me-2 my-1">
                 <li class="nav-item">
-                    <a href="{{ route('agent.quotations') }}" class="nav-link">
+                    <a href="{{ route('admin.quotations') }}" class="nav-link">
                         <i class="bi bi-chat-quote fs-3" data-bs-toggle="tooltip" data-bs-placement="bottom"
                             title="Parcels"></i>
-                        <span class="ms-2 ms-md-4 nav-name d-none d-sm-inline">My Quotations</span>
+                        <span class="ms-2 ms-md-4 nav-name d-none d-sm-inline">All Quotations</span>
                     </a>
                 </li>
                 <span class="heading ">Invoices</span>
                 <hr class="text-black me-2 my-1">
                 <li class="nav-item">
-                    <a href="{{ route('agent.invoices') }}" class="nav-link">
+                    <a href="{{ route('admin.invoices') }}" class="nav-link">
                         <i class="bi bi-receipt fs-3" data-bs-toggle="tooltip" data-bs-placement="bottom"
                             title="Parcels"></i>
-                        <span class="ms-2 ms-md-4 nav-name d-none d-sm-inline">My Invoices</span>
+                        <span class="ms-2 ms-md-4 nav-name d-none d-sm-inline">All Invoices</span>
                     </a>
                 </li>
                 <span class="heading ">Payments</span>

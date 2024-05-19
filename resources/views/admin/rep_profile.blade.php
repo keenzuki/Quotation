@@ -1,5 +1,5 @@
 @extends('layouts.app')
-<style>
+{{-- <style>
     /* Hide the radio inputs */
     input[type="radio"] {
         display: none;
@@ -10,19 +10,19 @@
         background-color: #007bff;
         color: #fff;
     }
-</style>
+</style> --}}
 @section('content')
     <div class="col content">
         <nav aria-label="breadcrumb">
             <ol class="breadcrumb">
                 <li class="breadcrumb-item"><a href="{{ route('dashboard') }}">Dashboard</a></li>
-                <li class="breadcrumb-item"><a href="{{ route('agent.clients') }}">Clients</a></li>
+                <li class="breadcrumb-item"><a href="{{ route('admin.salesreps') }}">Reps</a></li>
                 <li class="breadcrumb-item active" aria-current="page">Profile</li>
             </ol>
         </nav>
         <div class="card">
             <div class="card-header d-flex justify-content-between">
-                <h4>Client Details</h4>
+                <h4>{{ $rep->lname }}</h4>
                 <div>
                     <button class="btn btn-primary btn-sm dropdown-toggle" type="button" id="triggerId"
                         data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -33,7 +33,7 @@
                             data-bs-target="#profileUpdateModal">
                             <i class="bi bi-pencil-square text-primary"></i> Edit Profile
                         </button>
-                        <a class="dropdown-item" href="{{ route('agent.addquotation', ['client' => $client->id]) }}"><i
+                        <a class="dropdown-item" href="{{ route('agent.addquotation', ['client' => $rep->id]) }}"><i
                                 class="bi bi-plus-circle text-success"></i> Add Quotation</a>
                         <button type="button" class="dropdown-item" data-bs-toggle="modal" data-bs-target="#paymentModal">
                             <i class="bi bi-folder-plus text-primary"></i> Add Payment
@@ -46,7 +46,7 @@
             </div>
             <div class="card-body">
                 <div class="table-responsive">
-                    <table id="clientDetails"
+                    <table id="tableData"
                         class="table table-striped table-hover table-borderless table-primary align-middle">
                         <thead class="table-light">
                             <caption class="caption-top">
@@ -61,10 +61,10 @@
                         </thead>
                         <tbody class="table-group-divider">
                             <tr class="table-primary">
-                                <td>{{ $client->name }}</td>
-                                <td>{{ $client->phone }}</td>
-                                <td>{{ $client->email }}</td>
-                                <td>{{ $client->address }}</td>
+                                <td>{{ $rep->fname }}</td>
+                                <td>{{ $rep->phone }}</td>
+                                <td>{{ $rep->email }}</td>
+                                <td>{{ $rep->address }}</td>
                             </tr>
                         </tbody>
                     </table>
@@ -86,7 +86,7 @@
                         <tbody class="table-group-divider">
                             @forelse ($quotations as $key => $quotation)
                                 <tr class="table-primary">
-                                    <td>{{ $key }}
+                                    <td>{{ $key + 1 }}
                                     </td>
                                     <td><a class="text-decoration-none" href="">{{ $quotation->reference }}</a>
                                     </td>
@@ -178,10 +178,6 @@
                                                         href="{{ route('agent.editinvoice', ['invoice' => $quotation->id]) }}"><i
                                                             class="bi bi-pencil-square text-info"></i> Edit
                                                         Invoice</a>
-                                                    {{-- <a class="dropdown-item"
-                                                        href="{{ route('agent.processinvoice', ['invoice' => $quotation->id]) }}"><i
-                                                            class="fs-5 bi bi-check-circle text-info"></i>
-                                                        Process Invoice</a> --}}
                                                 </div>
                                             @endif
 
@@ -197,7 +193,6 @@
                         </tfoot>
                     </table>
                 </div>
-                <div class="row">{{ $quotations->links() }}</div>
                 <h2>Payments Section</h2>
                 <div class="table-responsive" style="max-height: 500px; overflow-y: auto;">
                     <table id="paymentsTable" class="table table-striped table-hover table-primary align-middle">
@@ -215,9 +210,9 @@
                             </tr>
                         </thead>
                         <tbody class="table-group-divider overflow-auto" style="width: 50vh;">
-                            @forelse ($payments as $payment)
+                            @forelse ($payments as $key => $payment)
                                 <tr class="table-primary">
-                                    <td>{{ ($payments->currentPage() - 1) * $payments->perPage() + $loop->iteration }}
+                                    <td>{{ $key + 1 }}
                                     </td>
                                     <td><a class="text-decoration-none" href="">{{ $payment->reference }}</a>
                                     </td>
@@ -245,10 +240,6 @@
                                             Action
                                         </button>
                                         <div class="dropdown-menu dropdown-menu-end" aria-labelledby="triggerId">
-                                            {{-- <button type="button" class="dropdown-item" data-bs-toggle="modal"
-                                                data-bs-target="#paymentDetails">
-                                                <i class="fs-5 bi bi-eye text-success"></i> view Payment
-                                            </button> --}}
                                             <button type="button" class="dropdown-item view-payment-btn"
                                                 data-payment-id="{{ $payment->id }}">
                                                 <i class="fs-5 bi bi-eye text-success"></i> View Payment
@@ -286,9 +277,7 @@
                         </tfoot>
                     </table>
                 </div>
-                <div class="row">{{ $payments->links() }}</div>
             </div>
-
         </div>
     </div>
     <div class="modal fade" id="profileUpdateModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
@@ -300,13 +289,13 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <form action="{{ route('agent.updateclient', ['client' => $client->id]) }}" method="post">
+                    <form action="{{ route('agent.updateclient', ['client' => $rep->id]) }}" method="post">
                         @csrf
                         @method('PUT')
                         <div class="row">
                             <div class="col-6">
                                 <label for="name">Full name</label>
-                                <input value="{{ $client->name }}" type="text" name="name" class="form-control"
+                                <input value="{{ $rep->name }}" type="text" name="name" class="form-control"
                                     id="name">
                                 @error('name')
                                     <span class="text-danger">{{ $message }}</span>
@@ -314,7 +303,7 @@
                             </div>
                             <div class="col-6">
                                 <label for="phone">Phone</label>
-                                <input value="{{ $client->phone }}" type="text" name="phone" class="form-control"
+                                <input value="{{ $rep->phone }}" type="text" name="phone" class="form-control"
                                     id="phone">
                                 @error('phone')
                                     <span class="text-danger">{{ $message }}</span>
@@ -322,7 +311,7 @@
                             </div>
                             <div class="col-6">
                                 <label for="email">Email</label>
-                                <input value="{{ $client->email }}" type="text" name="email" class="form-control"
+                                <input value="{{ $rep->email }}" type="text" name="email" class="form-control"
                                     id="email">
                                 @error('email')
                                     <span class="text-danger">{{ $message }}</span>
@@ -330,8 +319,8 @@
                             </div>
                             <div class="col-6">
                                 <label for="address">Address</label>
-                                <input value="{{ $client->address }}" type="text" name="address"
-                                    class="form-control" id="address">
+                                <input value="{{ $rep->address }}" type="text" name="address" class="form-control"
+                                    id="address">
                                 @error('address')
                                     <span class="text-danger">{{ $message }}</span>
                                 @enderror
@@ -355,7 +344,7 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <form action="{{ route('agent.addpayment', ['client' => $client->id]) }}" method="post">
+                    <form action="{{ route('agent.addpayment', ['client' => $rep->id]) }}" method="post">
                         @csrf
                         <div class="row">
                             <div class="col-12 d-flex justify-content-between">
@@ -519,6 +508,7 @@
             $('#paymentsTable').DataTable();
         });
         $(document).ready(function() {
+
             $('input[name="mode"]').change(function() {
                 var mode = $(this).val();
                 $('#bank_name').hide();

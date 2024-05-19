@@ -15,15 +15,29 @@ class QuotationController extends Controller
 {
     public function index(){
         $user = auth()->user();
-        $quotations = Quotation::from('quotations as q')
-                    ->join('clients as c',function ($join) use($user){
-                        $join->on('q.client_id','=','c.id')
-                        ->where('c.agent_id',$user->id);
+        $query = Quotation::from('quotations as q')
+                    ->join('clients as c', function ($join) use ($user) {
+                        $join->on('q.client_id', '=', 'c.id');
+                        if ($user->role_id == 3) {
+                            $join->where('c.agent_id', $user->id);
+                        }
                     })
-                    ->where('status','!=',3)
-                    ->select('q.*','c.name as client')
-                    ->orderBy('q.id','DESC')
-                    ->paginate(20);
+                    ->when($user->role_id != 3, function($query){
+                        return $query->join('users as u','u.id','=','c.agent_id');
+                    })
+                    ->where('q.status', '!=', 3)
+                    ->when($user->role_id != 3, function($query){
+                        return $query->where('q.status','!=', 1);
+                    })
+                    ->select('q.*', 'c.name as client')
+                    ->when($user->role_id != 3, function ($query) {
+                        return $query->addSelect('u.fname as rep');
+                    })
+                    ->orderBy('q.id', 'DESC');
+        
+        // Get the quotations based on the constructed query
+        $quotations = $query->get();
+        
         return view('quotations',compact(['quotations']));
     }
     public function quotation(Quotation $quotation)
@@ -281,12 +295,20 @@ class QuotationController extends Controller
         $invoices = Quotation::from('quotations as q')
                     ->join('clients as c',function ($join) use($user){
                         $join->on('q.client_id','=','c.id')
-                        ->where('c.agent_id',$user->id);
+                        ->when($user->role_id == 3, function($query)use($user){
+                           return $query->where('c.agent_id',$user->id);
+                        });  
                     })
-                    ->where('status','=',3)
+                    ->when($user->role_id != 3, function($query){
+                        return $query->join('users as u','u.id','=','c.agent_id');
+                    })
                     ->select('q.*','c.name as client')
+                    ->when($user->role_id != 3, function ($query) {
+                        return $query->addSelect('u.fname as rep');
+                    })
+                    ->where('q.status','=',3)
                     ->orderBy('q.id','DESC')
-                    ->paginate(20);
+                    ->get();
         return view('invoices',compact(['invoices']));
     }
     public function invoice(Quotation $invoice)
@@ -383,6 +405,8 @@ class QuotationController extends Controller
 
     public function invoicePdf(Quotation $invoice)
     { 
+        $client = $invoice->client;
+        $this->authorize('agentManageClient', $client);
         $sales = Sales::where('quot_id',$invoice->id)->get();
         // $data = ['invoice' => $invoice,'sales'=>$sales];
         $client= $invoice->client;
@@ -412,6 +436,8 @@ class QuotationController extends Controller
     }
     public function quotationPdf(Quotation $quotation)
     { 
+        $client = $quotation->client;
+        $this->authorize('agentManageClient', $client);
         $sales = Sales::where('quot_id',$quotation->id)->get();
         $client= $quotation->client;
         $title = "quotation";

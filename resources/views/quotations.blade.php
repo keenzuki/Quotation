@@ -8,21 +8,117 @@
             </ol>
         </nav>
         <div class="card">
-            <div class="card-header d-flex justify-content-between">
-                <h4>My Clients Quotations
-                    <a class="btn-primary bg-primary rounded-circle" href="{{ route('agent.makequotation') }}"><i
-                            class="bi bi-plus"></i></a>
+            <div class="card-header">
+                <h4>Clients' Quotations
+                    @cannot('seeAdminCont', auth()->user())
+                        <a class="btn-primary bg-primary rounded-circle" href="{{ route('agent.makequotation') }}"><i
+                                class="bi bi-plus"></i></a>
+                    @endcannot
                 </h4>
-                <div>
-                    <input type="text" class="form-control" placeholder="Search ...">
-                </div>
             </div>
             <div class="card-body">
-                @include('quotations_table')
-                <div class="row">
-                    <div class="col-12 text-center">
-                        {{ $quotations->links() }}
-                    </div>
+                <div class="table-responsive">
+                    <table id="quotationsTable"
+                        class="table table-striped table-hover table-borderless table-primary align-middle">
+                        <thead class="table-light">
+                            <tr>
+                                <th>#</th>
+                                <th>Ref</th>
+                                @can('seeAdminCont', auth()->user())
+                                    <th>Rep</th>
+                                @endcan
+                                <th>Title</th>
+                                <th>Client</th>
+                                <th>Price (Ksh)</th>
+                                <th>Date</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody class="table-group-divider">
+                            @forelse ($quotations as $key => $quotation)
+                                <tr class="table-primary">
+                                    <td scope="row">{{ $key + 1 }}
+                                    </td>
+                                    <td>{{ $quotation->reference }} </td>
+                                    @can('seeAdminCont', auth()->user())
+                                        <td>{{ $quotation->rep }} </td>
+                                    @endcan
+                                    <td>{{ $quotation->title }}</td>
+                                    <td>{{ $quotation->client }}</td>
+                                    <td>{{ number_format($quotation->cost, 2, '.', ',') }}</td>
+                                    <td>{{ $quotation->created_at->format('M d, Y') }}</td>
+                                    <td>
+                                        <div class="dropdown open">
+
+                                            @if ($quotation->status == 1)
+                                                <button class="btn btn-primary btn-sm dropdown-toggle" type="button"
+                                                    id="triggerId" data-bs-toggle="dropdown" aria-haspopup="true"
+                                                    aria-expanded="false">
+                                                    Draft
+                                                </button>
+                                                <div class="dropdown-menu dropdown-menu-end" aria-labelledby="triggerId">
+                                                    <a class="dropdown-item text-primary"
+                                                        href="{{ route('agent.editdraft', ['quotation' => $quotation->id]) }}"><i
+                                                            class="bi bi-check-circle text-primary"></i> Complete</a>
+                                                    <hr>
+                                                    <form class="dropdown-item"
+                                                        action="{{ route('agent.deletequotation', ['quotation' => $quotation->id]) }}"
+                                                        method="post">
+                                                        @csrf
+                                                        @method('DELETE')
+                                                        <button class="text-danger" type="submit"
+                                                            onclick="return confirm('Please Confrrm you want to delete the draft')"><i
+                                                                class="bi bi-trash text-danger"></i>
+                                                            Delete</button>
+                                                    </form>
+                                                </div>
+                                            @elseif ($quotation->status == 2)
+                                                <button class="btn btn-success btn-sm dropdown-toggle" type="button"
+                                                    id="triggerId" data-bs-toggle="dropdown" aria-haspopup="true"
+                                                    aria-expanded="false">
+                                                    Quotation
+                                                </button>
+                                                <div class="dropdown-menu dropdown-menu-end" aria-labelledby="triggerId">
+                                                    @can('seeAdminCont', auth()->user())
+                                                        <a class="dropdown-item"
+                                                            href="{{ route('quotationpdf', ['quotation' => $quotation->id]) }}"><i
+                                                                class="fs-5 bi bi-eye text-success"></i> View
+                                                            Quotation</a>
+                                                    @else
+                                                        <a class="dropdown-item text-success"
+                                                            href="{{ route('agent.updateQ2I', ['quotation' => $quotation->id]) }}"
+                                                            onclick="return confirm('Do you really want to convert this Quotation to Invoice direct?')"><i
+                                                                class="bi bi-pen text-success"></i> Make
+                                                            Invoice</a>
+                                                        <a class="dropdown-item text-info"
+                                                            href="{{ route('agent.editquotation', ['quotation' => $quotation->id]) }}"><i
+                                                                class="bi bi-pencil-square text-info"></i> Edit
+                                                            Quotation</a>
+                                                        <hr>
+                                                        <form class="dropdown-item"
+                                                            action="{{ route('agent.deletequotation', ['quotation' => $quotation->id]) }}"
+                                                            method="post">
+                                                            @csrf
+                                                            @method('DELETE')
+                                                            <button class="text-danger" type="submit"
+                                                                onclick="return confirm('Please Confrrm you want to delete the draft')"><i
+                                                                    class="bi bi-trash text-danger"></i>
+                                                                Delete</button>
+                                                        </form>
+                                                    @endcan
+                                                </div>
+                                            @endif
+
+                                        </div>
+                                    </td>
+                                </tr>
+                            @empty
+                                <td colspan="7" class="text-center text-info">No data available</td>
+                            @endforelse
+                        </tbody>
+                        <tfoot>
+                        </tfoot>
+                    </table>
                 </div>
             </div>
         </div>
@@ -62,7 +158,8 @@
                                     <td><input type="number" name="quantities[]" class="form-control"></td>
                                     <td><input type="number" name="prices[]" class="form-control"></td>
                                     <td><input type="text" name="subtotals[]" class="form-control" readonly></td>
-                                    <td><button type="button" class="btn btn-danger btn-sm removeRow">Remove</button></td>
+                                    <td><button type="button" class="btn btn-danger btn-sm removeRow">Remove</button>
+                                    </td>
                                 </tr>
                             </tbody>
                         </table>
@@ -85,7 +182,7 @@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
         $(document).ready(function() {
-            // Add Row button click event
+            $('#quotationsTable').DataTable();
             $('#addRow').click(function() {
                 $('#itemsTableBody').append(
                     '<tr>' +

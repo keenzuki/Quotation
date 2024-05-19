@@ -6,7 +6,7 @@
     }
 </style>
 @section('content')
-    <div class="col cont">
+    <div class="col content">
         @include('components.success')
         <div class="mt-3 ms-2">
             <nav aria-label="breadcrumb">

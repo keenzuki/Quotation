@@ -25,7 +25,7 @@
 
     <link rel="stylesheet" href="{{ asset('css/admin.css') }}">
     <link rel="stylesheet" href="{{ asset('css/app.css') }}">
-
+    <link rel="stylesheet" href="{{ asset('css/dataTables.bootstrap5.min.css') }}">
 
 </head>
 
@@ -44,39 +44,27 @@
         <!-- Admin Panel -->
         @if (Auth::user()->is_admin)
             @include('admin.navbar')
+            @include('components.success')
             <div class="container-fluid">
                 <div class="row flex-nowrap">
                     @include('admin.sidebar')
-                    <div class="col content">
-                        @yield('content')
-                    </div>
+                    @yield('content')
                 </div>
             </div>
+            @yield('footer')
         @else
-            {{-- <div class="container-xxl bg-white p-0"> --}}
             @include('layouts.navigation')
             @include('components.success')
             <div class="container-fluid">
                 <div class="row flex-nowrap">
                     @include('layouts.sidebar')
-                    {{-- <div class="col content"> --}}
                     @yield('content')
-                    {{-- </div> --}}
                 </div>
             </div>
             @yield('footer')
-            {{-- </div> --}}
         @endif
     @endguest
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            // Get the number of columns in the table
-            var numColumns = document.getElementById('dataTable').rows[0].cells.length;
-            // Set colspan dynamically
-            document.getElementById('colSpan').cells[0].colSpan = numColumns;
-            document.getElementById('submit').style.display = 'none';
-        });
-
         setTimeout(() => {
             $('#alert').alert('close')
         }, 6000)
@@ -84,6 +72,8 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous">
     </script>
+    <script src="{{ asset('js/dataTable.min.js') }}"></script>
+    <script src="{{ asset('js/dataTables.bootstrap5.js') }}"></script>
 </body>
 
 </html>

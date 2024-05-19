@@ -16,6 +16,9 @@
         integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
     <!-- Option 1: Include in HTML -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.3.0/font/bootstrap-icons.css">
+    {{-- Animation --}}
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+
     <style>
         /* Importing fonts from Google */
 
@@ -124,6 +127,19 @@
 </head>
 
 <body>
+    <div class="d-flex justify-content-center align-items-center animate__animated animate__bounceIn">
+        @if (session()->has('success'))
+            <div class="alert alert-success badge position-fixed" style="margin-top: 70px;" id="alert">
+                {{ session('success') }}
+                <a class="fs-5 ms-3 text-decoration-none" style="cursor: pointer;" data-bs-dismiss="alert">x</a>
+            </div>
+        @elseif (session('error'))
+            <div class="alert alert-danger badge text-dark position-fixed" style="margin-top: 70px;" id="alert">
+                {{ session('error') }}
+                <a class="fs-5 ms-3 text-decoration-none" style="cursor: pointer;" data-bs-dismiss="alert">x</a>
+            </div>
+        @endif
+    </div>
     <div class="container d-flex justify-content-around align-items-center">
         <div class="wrapper">
             <div class="logo">
