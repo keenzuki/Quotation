@@ -14,8 +14,7 @@
                 Edit invoice
             </div>
             <div class="card-body">
-                <form id="salesForm" action="{{ route('agent.updateinvoice', ['invoice' => $invoice->id]) }}"
-                    method="post">
+                <form id="salesForm" action="{{ route('updateinvoice', ['invoice' => $invoice->id]) }}" method="post">
                     @csrf
                     <div class="row">
                         <div class="col-6">

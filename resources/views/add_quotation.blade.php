@@ -4,7 +4,7 @@
         <nav aria-label="breadcrumb">
             <ol class="breadcrumb">
                 <li class="breadcrumb-item"><a href="{{ route('dashboard') }}">Dashboard</a></li>
-                <li class="breadcrumb-item"><a href="{{ route('agent.clients') }}">Clients</a></li>
+                <li class="breadcrumb-item"><a href="{{ route('clients') }}">Clients</a></li>
                 <li class="breadcrumb-item active" aria-current="page">{{ $client->name }}</li>
             </ol>
         </nav>
@@ -134,8 +134,13 @@
                         type: "POST",
                         data: formData,
                         success: function(response) {
-                            $('#loading').addClass('d-none');
-                            actionMessage('Draft Saved successfully', 'text-success', true);
+                            if (response.success) {
+                                $('#loading').addClass('d-none');
+                                actionMessage('Draft Saved successfully', 'text-success', true);
+                            } else {
+                                actionMessage('Sorry an error occurred', 'text-danger', false);
+                                $('#loading').addClass('d-none');
+                            }
                         },
                         error: function(xhr, status, error) {
                             actionMessage('Sorry an error occurred', 'text-danger', false);
@@ -151,7 +156,7 @@
                         $('#message').removeClass('animate__fadeIn').addClass('animate__fadeOut');
                         if (draftSaved) {
                             window.location.href =
-                                "{{ route('agent.clientprofile', ['client' => $client->id]) }}";
+                                "{{ route('clientprofile', ['client' => $client->id]) }}";
                         }
                     }, 4000);
                 }

@@ -60,12 +60,12 @@
                                                     href="{{ route('viewinvoice', ['invoice' => $invoice->id]) }}"><i
                                                         class="bi bi-tv text-secondary"></i> View Invoice</a>
                                                 <a class="dropdown-item"
-                                                    href="{{ route('agent.editinvoice', ['invoice' => $invoice->id]) }}"><i
+                                                    href="{{ route('editinvoice', ['invoice' => $invoice->id]) }}"><i
                                                         class="bi bi-pencil-square text-info"></i> Edit
                                                     invoice</a>
-                                                <a class="dropdown-item"
+                                                {{-- <a class="dropdown-item"
                                                     href="{{ route('agent.editinvoice', ['invoice' => $invoice->id]) }}"><i
-                                                        class="bi bi-cash-coin text-primary"></i> Make Payment</a>
+                                                        class="bi bi-cash-coin text-primary"></i> Make Payment</a> --}}
                                                 <hr>
                                                 <form class="dropdown-item"
                                                     action="{{ route('agent.deleteinvoice', ['invoice' => $invoice->id]) }}"

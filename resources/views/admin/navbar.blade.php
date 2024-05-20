@@ -42,49 +42,58 @@
                     <span class="ms-2 ms-md-4 nav-name">Dashboard</span>
                 </a>
             </li>
-            <span class="heading ">Clients</span>
-            <hr class="text-black me-2 my-1">
-            <li class="nav-item">
-                <a href="{{ route('agent.clients') }}" class="nav-link">
-                    <i class="bi bi-people fs-3" data-bs-toggle="tooltip" data-bs-placement="bottom"
-                        title="Parcels"></i>
-                    <span class="ms-2 ms-md-4 nav-name">My Clients</span>
-                </a>
-            </li>
             <span class="heading ">Quotations</span>
             <hr class="text-black me-2 my-1">
             <li class="nav-item">
-                <a href="{{ route('agent.quotations') }}" class="nav-link">
+                <a href="{{ route('admin.quotations') }}" class="nav-link">
                     <i class="bi bi-chat-quote fs-3" data-bs-toggle="tooltip" data-bs-placement="bottom"
                         title="Parcels"></i>
-                    <span class="ms-2 ms-md-4 nav-name">My Quotations</span>
+                    <span class="ms-2 ms-md-4 nav-name">All Quotations</span>
                 </a>
             </li>
             <span class="heading ">Invoices</span>
             <hr class="text-black me-2 my-1">
             <li class="nav-item">
-                <a href="{{ route('agent.invoices') }}" class="nav-link">
+                <a href="{{ route('admin.invoices') }}" class="nav-link">
                     <i class="bi bi-receipt fs-3" data-bs-toggle="tooltip" data-bs-placement="bottom"
                         title="Parcels"></i>
-                    <span class="ms-2 ms-md-4 nav-name">My Invoices</span>
+                    <span class="ms-2 ms-md-4 nav-name">All Invoices</span>
                 </a>
             </li>
             <span class="heading ">Payments</span>
             <hr class="text-black me-2 my-1">
             <li class="nav-item">
-                <a href="{{ route('agent.clients') }}" class="nav-link">
+                <a href="{{ route('payments') }}" class="nav-link">
                     <i class="bi bi-wallet2 fs-3" data-bs-toggle="tooltip" data-bs-placement="bottom"
                         title="Parcels"></i>
                     <span class="ms-2 ms-md-4 nav-name">My Payments</span>
                 </a>
             </li>
+            <span class="heading ">Clients</span>
+            <hr class="text-black me-2 my-1">
+            <li class="nav-item">
+                <a href="{{ route('clients') }}" class="nav-link">
+                    <i class="bi bi-people fs-3" data-bs-toggle="tooltip" data-bs-placement="bottom"
+                        title="Parcels"></i>
+                    <span class="ms-2 ms-md-4 nav-name">All Clients</span>
+                </a>
+            </li>
             <span class="heading ">Items</span>
             <hr class="text-black me-2 my-1">
             <li class="nav-item">
-                <a href="{{ route('agent.items') }}" class="nav-link">
+                <a href="{{ route('items') }}" class="nav-link">
                     <i class="bi bi-diagram-3 fs-3" data-bs-toggle="tooltip" data-bs-placement="bottom"
                         title="Parcels"></i>
                     <span class="ms-2 ms-md-4 nav-name">All Items</span>
+                </a>
+            </li>
+            <span class="heading ">Sales&nbsp;Rep</span>
+            <hr class="text-black me-2 my-1">
+            <li class="nav-item">
+                <a href="{{ route('admin.salesreps') }}" class="nav-link">
+                    <i class="bi bi-people fs-3" data-bs-toggle="tooltip" data-bs-placement="bottom"
+                        title="Parcels"></i>
+                    <span class="ms-2 ms-md-4 nav-name">All Representatives</span>
                 </a>
             </li>
             <span class="heading">Reports</span>

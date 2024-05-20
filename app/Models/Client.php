@@ -15,4 +15,7 @@ class Client extends Model
         'address',
         'agent_id'
     ];
+    public function agent(){
+        return $this->belongsTo(User::class,'agent_id','id');
+    }
 }

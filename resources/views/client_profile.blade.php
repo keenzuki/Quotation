@@ -16,7 +16,7 @@
         <nav aria-label="breadcrumb">
             <ol class="breadcrumb">
                 <li class="breadcrumb-item"><a href="{{ route('dashboard') }}">Dashboard</a></li>
-                <li class="breadcrumb-item"><a href="{{ route('agent.clients') }}">Clients</a></li>
+                <li class="breadcrumb-item"><a href="{{ route('clients') }}">Clients</a></li>
                 <li class="breadcrumb-item active" aria-current="page">Profile</li>
             </ol>
         </nav>
@@ -86,7 +86,7 @@
                         <tbody class="table-group-divider">
                             @forelse ($quotations as $key => $quotation)
                                 <tr class="table-primary">
-                                    <td>{{ $key }}
+                                    <td>{{ $key + 1 }}
                                     </td>
                                     <td><a class="text-decoration-none" href="">{{ $quotation->reference }}</a>
                                     </td>
@@ -175,7 +175,7 @@
                                                             class="bi bi-pen text-success"></i> View
                                                         Invoice</a>
                                                     <a class="dropdown-item text-info"
-                                                        href="{{ route('agent.editinvoice', ['invoice' => $quotation->id]) }}"><i
+                                                        href="{{ route('editinvoice', ['invoice' => $quotation->id]) }}"><i
                                                             class="bi bi-pencil-square text-info"></i> Edit
                                                         Invoice</a>
                                                     {{-- <a class="dropdown-item"
@@ -197,7 +197,6 @@
                         </tfoot>
                     </table>
                 </div>
-                <div class="row">{{ $quotations->links() }}</div>
                 <h2>Payments Section</h2>
                 <div class="table-responsive" style="max-height: 500px; overflow-y: auto;">
                     <table id="paymentsTable" class="table table-striped table-hover table-primary align-middle">
@@ -215,9 +214,9 @@
                             </tr>
                         </thead>
                         <tbody class="table-group-divider overflow-auto" style="width: 50vh;">
-                            @forelse ($payments as $payment)
+                            @forelse ($payments as $key => $payment)
                                 <tr class="table-primary">
-                                    <td>{{ ($payments->currentPage() - 1) * $payments->perPage() + $loop->iteration }}
+                                    <td>{{ $key + 1 }}
                                     </td>
                                     <td><a class="text-decoration-none" href="">{{ $payment->reference }}</a>
                                     </td>
@@ -245,15 +244,10 @@
                                             Action
                                         </button>
                                         <div class="dropdown-menu dropdown-menu-end" aria-labelledby="triggerId">
-                                            {{-- <button type="button" class="dropdown-item" data-bs-toggle="modal"
-                                                data-bs-target="#paymentDetails">
-                                                <i class="fs-5 bi bi-eye text-success"></i> view Payment
-                                            </button> --}}
-                                            <button type="button" class="dropdown-item view-payment-btn"
-                                                data-payment-id="{{ $payment->id }}">
+                                            <a href="{{ route('showpayment', ['payment' => $payment->id]) }}"
+                                                class="dropdown-item view-payment-btn">
                                                 <i class="fs-5 bi bi-eye text-success"></i> View Payment
-                                            </button>
-
+                                            </a>
                                             <button type="button" class="dropdown-item edit-payment-btn"
                                                 data-editpayment-id="{{ $payment->id }}">
                                                 <i class="fs-5 bi bi-pencil-square text-success"></i> Edit Payment
@@ -286,7 +280,6 @@
                         </tfoot>
                     </table>
                 </div>
-                <div class="row">{{ $payments->links() }}</div>
             </div>
 
         </div>
@@ -407,56 +400,6 @@
             </div>
         </div>
     </div>
-    <div class="modal fade" id="paymentDetails" data-bs-keyboard="false" tabindex="-1"
-        aria-labelledby="staticBackdropLabel" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h1 class="modal-title fs-5" id="staticBackdropLabel">Payment Details</h1>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <div class="row">
-                        <div class="col-12">
-                            <p style="font-weight: bold;" class="text-bold">Payment Date: <span
-                                    style="font-weight: normal;" id="paymentDate">....</span>
-                            </p>
-                        </div>
-                        <div class="col-12 col-sm-6">
-                            <p style="font-weight: bold;" class="text-bold">Client: <span style="font-weight: normal;"
-                                    id="clientName">....</span></p>
-                            <p style="font-weight: bold;" class="text-bold">Reciept No: <span
-                                    style="font-weight: normal;" id="receiptNo">....</span></p>
-                            <p style="font-weight: bold;" class="text-bold">Reference: <span style="font-weight: normal;"
-                                    id="referenceNo">....</span>
-                            </p>
-
-                        </div>
-                        <div class="col-12 col-sm-6">
-                            <p style="font-weight: bold;" class="text-bold">Mode: <span style="font-weight: normal;"
-                                    id="paymentMode">....</span></p>
-                            <p style="font-weight: bold;" class="text-bold">Amount: <span style="font-weight: normal;"
-                                    id="paymentAmount">....</span></p>
-                            <p style="font-weight: bold;" class="text-bold">status: <span class="badge"
-                                    style="font-weight: normal;" id="paymentStatus">....</span></p>
-                        </div>
-                        <div class="col-12">
-                            <div class="row">
-                                <div class="col-6 col-sm-6">
-                                    <p style="font-weight: bold;" class="text-bold">Bank: <span
-                                            style="font-weight: normal;" id="bankname">....</span></p>
-                                </div>
-                                <div class="col-6 col-sm-6">
-                                    <p style="font-weight: bold;" class="text-bold">Account: <span
-                                            style="font-weight: normal;" id="accountnumber">....</span></p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
     <div class="modal fade" id="editPaymentDetails" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
         aria-labelledby="clientName" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
@@ -534,43 +477,10 @@
                     $('#reference_fields').hide();
                 }
             });
-            $('.view-payment-btn').click(function() {
-                var paymentId = $(this).data('payment-id');
-                $.ajax({
-                    url: "{{ route('agent.showpayment', ['payment' => ':paymentId']) }}".replace(
-                        ':paymentId', paymentId),
-                    type: 'GET',
-                    success: function(response) {
-                        // Populate the modal with the fetched response
-                        $('#clientName').text(response.client);
-                        $('#receiptNo').text(response.sys_ref);
-                        $('#referenceNo').text(response.reference);
-                        $('#paymentMode').text(response.mode);
-                        $('#paymentAmount').text(response.amount);
-                        $('#paymentStatus').text(response.status);
-                        $('#paymentDate').text(response.date);
-                        $('#bankname').text(response.bank_name);
-                        $('#accountnumber').text(response.account_no);
-                        $('#paymentStatus').removeClass('bg-danger bg-warning bg-success');
-                        if (response.status == 'Unallocated') {
-                            $('#paymentStatus').addClass('bg-danger');
-                        } else if (response.status == 'Partially Allocated') {
-                            $('#paymentStatus').addClass('bg-warning');
-                        } else if (response.status == 'Fully Allocated') {
-                            $('#paymentStatus').addClass('bg-success');
-                        }
-                        // Open the modal after successful AJAX request
-                        $('#paymentDetails').modal('show');
-                    },
-                    error: function() {
-                        alert('Failed to fetch payment details');
-                    }
-                });
-            });
             $('.edit-payment-btn').click(function() {
                 var paymentID = $(this).data('editpayment-id');
                 $.ajax({
-                    url: "{{ route('agent.showpayment', ['payment' => ':paymentId']) }}".replace(
+                    url: "{{ route('editpayment', ['payment' => ':paymentId']) }}".replace(
                         ':paymentId', paymentID),
                     type: 'GET',
                     success: function(response) {

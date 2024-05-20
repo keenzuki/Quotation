@@ -9,23 +9,57 @@
         </nav>
         <div class="card">
             <div class="card-header d-flex justify-content-between">
-                <h4>My Clients
-                    <button type="button" class="btn-primary bg-primary rounded-circle" data-bs-toggle="modal"
-                        data-bs-target="#staticBackdrop">
-                        <i class="bi bi-plus"></i>
-                    </button>
+                <h4>Clients
+                    @cannot('seeAdminCont', auth()->user())
+                        <button type="button" class="btn-primary bg-primary rounded-circle" data-bs-toggle="modal"
+                            data-bs-target="#staticBackdrop">
+                            <i class="bi bi-plus"></i>
+                        </button>
+                    @endcannot
                 </h4>
-                <div>
-                    <input type="text" class="form-control" placeholder="Search ...">
-                </div>
             </div>
             <div class="card-body">
-                @include('clients_table')
-                <div class="row">
-                    <div class="col-12 text-center">
-                        {{ $clients->links() }}
-                    </div>
+                <div class="table-responsive">
+                    <table id="clientsTable"
+                        class="table table-striped table-hover table-borderless table-primary align-middle">
+                        <thead class="table-light">
+                            <tr>
+                                <th>#</th>
+                                <th>Name</th>
+                                <th>Phone</th>
+                                <th>Address</th>
+                                @can('seeAdminCont', auth()->user())
+                                    <th>Rep</th>
+                                @endcan
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody class="table-group-divider">
+                            @forelse ($clients as $key => $client)
+                                <tr class="table-primary">
+                                    <td scope="row">
+                                        {{ $key + 1 }}</td>
+                                    <td>{{ $client->name }}</td>
+                                    <td>{{ $client->phone }}</td>
+                                    <td>{{ $client->address }}</td>
+                                    @can('seeAdminCont', auth()->user())
+                                        <td>{{ $client->rep }}</td>
+                                    @endcan
+                                    <td>
+                                        <a class="btn btn-primary"
+                                            href="{{ route('clientprofile', ['client' => $client->id]) }}">profile</a>
+                                    </td>
+                                </tr>
+                            @empty
+                                <td colspan="5" class="text-center text-info">No data available</td>
+                            @endforelse
+                        </tbody>
+                        <tfoot>
+
+                        </tfoot>
+                    </table>
                 </div>
+
             </div>
         </div>
     </div>
@@ -73,6 +107,7 @@
     {{-- <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> --}}
     <script>
         $(document).ready(function() {
+            $('#clientsTable').DataTable();
             $('form').submit(function(event) {
                 // Prevent the form from submitting
                 event.preventDefault();

@@ -17,7 +17,19 @@ class ClientController extends Controller
     // }
     public function index()
     {
-        $clients = Client::where('agent_id',auth()->user()->id)->orderBy('id','DESC')->paginate(20);
+        $user = auth()->user();
+        $clients = Client::from('clients as c')
+                ->when($user->role_id == 3, function($query) use($user){
+                    return $query->where('c.agent_id',$user->id);
+                })
+                ->when($user->role_id != 3, function($query){
+                    $query->join('users as u', 'u.id','=','c.agent_id');
+                })
+                ->select('c.*')
+                ->when($user->role_id != 3, function($query){
+                    $query->addSelect('u.fname as rep');
+                })
+                ->orderBy('id','DESC')->get();
         return view('clients',compact('clients'));
     }
 
@@ -56,12 +68,14 @@ class ClientController extends Controller
         $quotations = Quotation::from('quotations as q')
                     ->join('clients as c', function($join) use($user){
                         $join->on('c.id','=','q.client_id')
-                            ->where('c.agent_id',$user->id);
+                            ->when($user->role_id == 3, function($query) use($user){
+                                return $query->where('c.agent_id',$user->id);
+                            });
                     })
                     ->where('q.client_id',$client->id)
                     ->select('q.id','q.title','q.details','q.cost','q.created_at','q.reference','q.status','q.pay_status')
                     ->orderBy('q.id','DESC')
-                    ->paginate(20);
+                    ->get();
         $payments = Payment::from('payments as p')
                     ->join('clients as c', function($join) use($user){
                         $join->on('c.id','=','p.client_id')
@@ -73,7 +87,7 @@ class ClientController extends Controller
                         DB::raw("COALESCE(p.account, 'N/A') as account")
                     )
                     ->orderBy('p.paid_on','DESC')
-                    ->paginate(20);
+                    ->get();
         return view('client_profile',compact(['client','payments','quotations']));
     }
 

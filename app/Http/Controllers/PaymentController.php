@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Jobs\PaymentProcessing;
 use Illuminate\Support\Facades\Validator;
+use PDF;
 
 class PaymentController extends Controller
 {
@@ -17,11 +18,19 @@ class PaymentController extends Controller
         $payments = Payment::from('payments as p')
                 ->join('clients as c', function($join) use($user){
                     $join->on('c.id','p.client_id')
-                    ->where('c.agent_id',$user->id);
+                    ->when($user->role_id == 3, function($query) use($user){
+                        return $query->where('c.agent_id',$user->id);
+                    });
+                })
+                ->when($user->role_id != 3, function($query){
+                    return $query->join('users as u','u.id','=','c.agent_id');
                 })
                 ->select('p.id','p.sys_ref','c.name as client','p.amount','paid_on as date','p.status','p.mode',
                     DB::raw("COALESCE(p.reference, 'N/A') as reference")
                 )
+                ->when($user->role_id != 3, function ($query) {
+                    return $query->addSelect('u.fname as rep');
+                })
                 ->orderBy('p.paid_on','DESC')
                 ->paginate(20);
         return view('payments', compact('payments'));
@@ -83,7 +92,9 @@ class PaymentController extends Controller
         $payment = Payment::from('payments as p')
                 ->join('clients as c', function($join) use($user){
                     $join->on('c.id','p.client_id')
-                    ->where('c.agent_id',$user->id);
+                    ->when($user->role_id == 3, function($query) use($user){
+                        return $query->where('c.agent_id',$user->id);
+                    });
                 })
                 ->select('p.id','p.sys_ref','c.name as client','p.amount','paid_on as date','p.mode',
                     DB::raw("COALESCE(p.reference, 'N/A') as reference"),
@@ -100,9 +111,7 @@ class PaymentController extends Controller
                 ->first();
         return response()->json($payment);
     }
-    /**
-     * Update the specified resource in storage.
-     */
+
     public function update(Request $request, Payment $payment)
     {
         $validator = Validator::make($request->all(), [
@@ -129,7 +138,7 @@ class PaymentController extends Controller
             $payment->update([
                 'amount' => $request->amount,
                 // 'date' => $request->date,
-                'reference' => $request->reference,
+                'reference' => $payment->mode == 'cash' ? null: $request->reference,
                 'bank' => $request->bank_name,
                 'account' => $request->account_no,
                 // 'paid_on' => $request->date,
@@ -143,11 +152,21 @@ class PaymentController extends Controller
         }
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(Payment $payment)
-    {
-        //
+    public function paymentPdf(Payment $payment)
+    { 
+        $client = $payment->client;
+        $this->authorize('agentManageClient', $client);
+        // $sales = Sales::where('quot_id',$quotation->id)->get();
+        // $client= $quotation->client;
+        $title = "Payment Confirmation";
+        $type = "Payment";
+        $date = $payment->created_at;
+        $reference ='Reciept No: '. $payment->sys_ref;
+        // $project_title = $quotation->title;
+        $pdf = PDF::loadView('reports.payment_pdf',compact(['payment','client','title','type','date','reference']));
+        $pdf->setPaper("a4", "portrait");
+        $pdfname= 'payment-'.$reference.'.pdf';
+        $doc = $pdf->stream($pdfname);
+        return $doc;
     }
 }

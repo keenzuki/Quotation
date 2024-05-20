@@ -104,15 +104,6 @@
                         <span class="ms-2 ms-md-4 nav-name d-none d-sm-inline">Dashboard</span>
                     </a>
                 </li>
-                <span class="heading ">Sales&nbsp;Rep</span>
-                <hr class="text-black me-2 my-1">
-                <li class="nav-item">
-                    <a href="{{ route('admin.salesreps') }}" class="nav-link">
-                        <i class="bi bi-people fs-3" data-bs-toggle="tooltip" data-bs-placement="bottom"
-                            title="Parcels"></i>
-                        <span class="ms-2 ms-md-4 nav-name d-none d-sm-inline">All Representatives</span>
-                    </a>
-                </li>
                 <span class="heading ">Quotations</span>
                 <hr class="text-black me-2 my-1">
                 <li class="nav-item">
@@ -134,19 +125,37 @@
                 <span class="heading ">Payments</span>
                 <hr class="text-black me-2 my-1">
                 <li class="nav-item">
-                    <a href="{{ route('agent.clients') }}" class="nav-link">
+                    <a href="{{ route('payments') }}" class="nav-link">
                         <i class="bi bi-wallet2 fs-3" data-bs-toggle="tooltip" data-bs-placement="bottom"
                             title="Parcels"></i>
                         <span class="ms-2 ms-md-4 nav-name d-none d-sm-inline">My Payments</span>
                     </a>
                 </li>
+                <span class="heading ">Clients</span>
+                <hr class="text-black me-2 my-1">
+                <li class="nav-item">
+                    <a href="{{ route('clients') }}" class="nav-link">
+                        <i class="bi bi-people fs-3" data-bs-toggle="tooltip" data-bs-placement="bottom"
+                            title="Parcels"></i>
+                        <span class="ms-2 ms-md-4 nav-name">All Clients</span>
+                    </a>
+                </li>
                 <span class="heading ">Items</span>
                 <hr class="text-black me-2 my-1">
                 <li class="nav-item">
-                    <a href="{{ route('agent.items') }}" class="nav-link">
+                    <a href="{{ route('items') }}" class="nav-link">
                         <i class="bi bi-diagram-3 fs-3" data-bs-toggle="tooltip" data-bs-placement="bottom"
                             title="Parcels"></i>
                         <span class="ms-2 ms-md-4 nav-name d-none d-sm-inline">All Items</span>
+                    </a>
+                </li>
+                <span class="heading ">Sales&nbsp;Rep</span>
+                <hr class="text-black me-2 my-1">
+                <li class="nav-item">
+                    <a href="{{ route('admin.salesreps') }}" class="nav-link">
+                        <i class="bi bi-people fs-3" data-bs-toggle="tooltip" data-bs-placement="bottom"
+                            title="Parcels"></i>
+                        <span class="ms-2 ms-md-4 nav-name d-none d-sm-inline">All Representatives</span>
                     </a>
                 </li>
                 <span class="heading">Reports</span>
@@ -176,16 +185,4 @@
             </ul>
         </div>
     </nav>
-    {{-- <script>
-        $(document).ready(function() {
-            $('.nav-link').on('click', function(e) {
-                e.preventDefault();
-                $('.nav-link').removeClass('active');
-                $(this).addClass('active');
-
-                var targetUrl = $(this).attr('href');
-                window.location.href = targetUrl;
-            })
-        })
-    </script> --}}
 </body>

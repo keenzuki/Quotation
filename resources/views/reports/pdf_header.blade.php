@@ -114,12 +114,12 @@
             <td style="max-width: 50px; vertical-align: top; overflow-wrap: break-word;">
                 <span>To</span>
                 <p>{{ $client->name }}</p>
-                <p style="color: blue;">{{ $client->email }}</p>
+                <p>{{ $client->phone }}</p>
                 {{-- <p>{{ $client->address }}</p> --}}
             </td>
             <td style="max-width: 50px; vertical-align: top; overflow-wrap: break-word; text-align:right;">
                 <span>{{ $type }} Details</span>
-                <p><small>Ref: </small>{{ $reference }}</p>
+                <p>{{ $reference }}</p>
                 <p>Date: {{ \Carbon\Carbon::parse($date)->format('D d M, Y') }}</p>
             </td>
         </tr>

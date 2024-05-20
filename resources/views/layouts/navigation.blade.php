@@ -45,7 +45,7 @@
             <span class="heading ">Clients</span>
             <hr class="text-black me-2 my-1">
             <li class="nav-item">
-                <a href="{{ route('agent.clients') }}" class="nav-link">
+                <a href="{{ route('clients') }}" class="nav-link">
                     <i class="bi bi-people fs-3" data-bs-toggle="tooltip" data-bs-placement="bottom"
                         title="Parcels"></i>
                     <span class="ms-2 ms-md-4 nav-name">My Clients</span>
@@ -72,7 +72,7 @@
             <span class="heading ">Payments</span>
             <hr class="text-black me-2 my-1">
             <li class="nav-item">
-                <a href="{{ route('agent.payments') }}" class="nav-link">
+                <a href="{{ route('payments') }}" class="nav-link">
                     <i class="bi bi-wallet2 fs-3" data-bs-toggle="tooltip" data-bs-placement="bottom"
                         title="Parcels"></i>
                     <span class="ms-2 ms-md-4 nav-name">My Payments</span>
@@ -81,7 +81,7 @@
             <span class="heading ">Items</span>
             <hr class="text-black me-2 my-1">
             <li class="nav-item">
-                <a href="{{ route('agent.items') }}" class="nav-link">
+                <a href="{{ route('items') }}" class="nav-link">
                     <i class="bi bi-diagram-3 fs-3" data-bs-toggle="tooltip" data-bs-placement="bottom"
                         title="Parcels"></i>
                     <span class="ms-2 ms-md-4 nav-name">All Items</span>

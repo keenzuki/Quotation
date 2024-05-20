@@ -4,7 +4,9 @@
         <nav aria-label="breadcrumb">
             <ol class="breadcrumb">
                 <li class="breadcrumb-item"><a href="{{ route('dashboard') }}">Dashboard</a></li>
-                <li class="breadcrumb-item"><a href="{{ route('agent.invoices') }}">Invoices</a></li>
+                <li class="breadcrumb-item"><a
+                        href="@can('seeAdminCont', auth()->user()) {{ route('admin.invoices') }} @else {{ route('agent.invoices') }} @endcan">Invoices</a>
+                </li>
                 <li class="breadcrumb-item active" aria-current="page">{{ $invoice->reference }}</li>
             </ol>
         </nav>

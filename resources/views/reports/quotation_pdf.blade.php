@@ -6,7 +6,9 @@
         @include('reports.pdf_header')
         <div class="card">
             <div class="card-body">
-                <h3 id="tableHead" style="text-transform: uppercase; text-align: left;">Quotation Items</h3>
+                <h3 style="text-transform: uppercase; text-align: left; margin: 3px;">Project: <span
+                        style="font-weight: normal; text-transform:capitalize;">{{ $project_title }}</span></h3>
+                <h3 id="tableHead" style="text-transform: uppercase; text-align: left; margin: 3px;">Quotation Items</h3>
                 <table class="table">
                     <thead>
                         <tr>
@@ -36,10 +38,11 @@
                     <tfoot>
                         <tr>
                             <td colspan="5">
-                                <h5 style="text-align: right;">TOTAL</h5>
+                                <h5 style="text-align: right; font-size: 20px;">Total</h5>
                             </td>
                             <td>
-                                <h5 style="text-align: right;">{{ number_format($invoiced, 2, '.', ',') }}</h5>
+                                <h5 style="text-align: right; font-size: 20px;">
+                                    {{ number_format($invoiced, 2, '.', ',') }}</h5>
                             </td>
                         </tr>
                     </tfoot>

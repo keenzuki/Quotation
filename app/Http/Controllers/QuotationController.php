@@ -104,10 +104,10 @@ class QuotationController extends Controller
                 'cost' => $total
             ]);
             DB::commit();
-            return redirect()->route('agent.quotations')->with('success','Quotation stored successfully');
+            return response()->json(['success'=>'success']);
         } catch (\Throwable $th) {
             DB::rollBack();
-            return response('error','An error occured');
+            return response()->json(['error'=>'Error']);
         }
     }
     public function editDraft(Quotation $quotation){
@@ -128,7 +128,7 @@ class QuotationController extends Controller
             ]);
             dispatch(new PaymentProcessing($client));
             DB::commit();
-            return redirect()->route('agent.clientprofile',['client'=>$client->id])->with('success','Quotation converted successfully');
+            return redirect()->route('clientprofile',['client'=>$client->id])->with('success','Quotation converted successfully');
         } catch (\Throwable $th) {
             DB::rollBack();
             return back()->with('error','An error occured. Try again');
@@ -175,7 +175,7 @@ class QuotationController extends Controller
             DB::commit();
             // if($request->route()->getName()=="agent.update"){
             // };
-            return redirect()->route('agent.clientprofile',['client'=>$client->id])->with('success','Quotation updated successfully');
+            return redirect()->route('clientprofile',['client'=>$client->id])->with('success','Quotation updated successfully');
         } catch (\Throwable $th) {
             DB::rollBack();
             return back()-> with('error','An error occured');
@@ -215,7 +215,7 @@ class QuotationController extends Controller
                 'cost' => $total
             ]);
             DB::commit();
-            return redirect()->route('agent.clientprofile',['client'=>$client->id])->with('success','Draft saved as Quotation successfully');
+            return redirect()->route('clientprofile',['client'=>$client->id])->with('success','Draft saved as Quotation successfully');
         } catch (\Throwable $th) {
             DB::rollBack();
             return back()-> with('error','An error occured');
@@ -259,7 +259,7 @@ class QuotationController extends Controller
                 'cost' => $total
             ]);
             DB::commit();
-            return redirect()->route('agent.clientprofile',['client'=>$client->id])->with('success','Quotation stored successfully');
+            return redirect()->route('clientprofile',['client'=>$client->id])->with('success','Quotation stored successfully');
         } catch (\Throwable $th) {
             DB::rollBack();
             return back()-> with('error','An error occured');
@@ -283,7 +283,7 @@ class QuotationController extends Controller
                 'details' => $request->details
             ]);
             DB::commit();
-            return redirect()->route('agent.clientprofile',['client'=>$client->id])->with('success','Quotation saved successfully');
+            return redirect()->route('clientprofile',['client'=>$client->id])->with('success','Quotation saved successfully');
         } catch (\Throwable $th) {
             DB::rollBack();
             return back()->with('error','Ooops. Somethings went wrong. Try again');
@@ -364,7 +364,7 @@ class QuotationController extends Controller
             DB::commit();
             // if($request->route()->getName()=="agent.update"){
             // };
-            return redirect()->route('agent.clientprofile',['client'=>$client->id])->with('success','Invoice updated successfully');
+            return redirect()->route('clientprofile',['client'=>$client->id])->with('success','Invoice updated successfully');
         } catch (\Throwable $th) {
             DB::rollBack();
             return back()-> with('error','An error occured');
@@ -427,8 +427,9 @@ class QuotationController extends Controller
         $title = "customer invoice";
         $type = "Invoice";
         $date = $invoice->created_at;
-        $reference = $invoice->reference;
-        $pdf = PDF::loadView('reports.invoice_pdf',compact(['invoice','client','sales','title','payments','type','date','reference']));
+        $reference ='Ref: '. $invoice->reference;
+        $project_title = $invoice->title;
+        $pdf = PDF::loadView('reports.invoice_pdf',compact(['invoice','client','sales','title','payments','type','date','reference','project_title']));
         $pdf->setPaper("a4", "portrait");
         $pdfname= 'invoice-'.$invoice->reference.'.pdf';
         $doc = $pdf->stream($pdfname);
@@ -443,10 +444,11 @@ class QuotationController extends Controller
         $title = "quotation";
         $type = "Quotation";
         $date = $quotation->created_at;
-        $reference = $quotation->reference;
-        $pdf = PDF::loadView('reports.quotation_pdf',compact(['quotation','client','sales','title','type','date','reference']));
+        $reference = 'Ref: '.$quotation->reference;
+        $project_title = $quotation->title;
+        $pdf = PDF::loadView('reports.quotation_pdf',compact(['quotation','client','sales','title','type','date','reference','project_title']));
         $pdf->setPaper("a4", "portrait");
-        $pdfname= 'invoice-'.$quotation->reference.'.pdf';
+        $pdfname= 'quotation-'.$quotation->reference.'.pdf';
         $doc = $pdf->stream($pdfname);
         return $doc;
     }

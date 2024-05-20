@@ -12,11 +12,8 @@
             </div>
             <div class="card-body p-1">
                 <div class="table-responsive">
-                    <table class="table table-striped table-hover table-primary align-middle">
+                    <table id="salesTable" class="table table-striped table-hover table-primary align-middle">
                         <thead class="table-light">
-                            <caption class="caption-top">
-                                Selling database
-                            </caption>
                             <tr>
                                 <th>#</th>
                                 <th>Item</th>
@@ -49,4 +46,9 @@
             </div>
         </div>
     </div>
+    <script>
+        $(document).ready(function() {
+            $('#salesTable').DataTable();
+        });
+    </script>
 @endsection

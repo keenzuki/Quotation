@@ -29,30 +29,36 @@ Route::get('/', function () {
 })->name('home');
 
 Route::get('/dashboard',[PageController::class,'dashboard'])->middleware(['auth'])->name('dashboard');
-
 Route::middleware('auth')->group(function () {
-    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
-    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
-    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
-    Route::get('invoice/{invoice}/pdf', [QuotationController::class,'invoicePdf'])->name('invoicepdf');
-    Route::get('quotation/{quotation}/pdf', [QuotationController::class,'quotationPdf'])->name('quotationpdf');
-    Route::get('view-invoice/{invoice}', [QuotationController::class,'invoice'])->name('viewinvoice');
-
-});
+        Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
+        Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
+        Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+        Route::get('invoice/{invoice}/pdf', [QuotationController::class, 'invoicePdf'])->name('invoicepdf');
+        Route::get('quotation/{quotation}/pdf', [QuotationController::class, 'quotationPdf'])->name('quotationpdf');
+        Route::get('view-invoice/{invoice}', [QuotationController::class, 'invoice'])->name('viewinvoice');
+        Route::get('client/edit-invoice/{invoice}', [QuotationController::class, 'editInvoice'])->name('editinvoice');
+        Route::post('client/update-invoice/{invoice}', [QuotationController::class, 'updateInvoice'])->name('updateinvoice');
+        Route::get('client/profile/{client}', [ClientController::class, 'profile'])->name('clientprofile');
+        Route::get('clients', [ClientController::class, 'index'])->name('clients');
+        Route::get('payments',[PaymentController::class,'index'])->name('payments');
+        Route::get('payments/show/{payment}',[PaymentController::class,'paymentPdf'])->name('showpayment');
+        Route::get('payments/edit/{payment}',[PaymentController::class,'show'])->name('editpayment');
+        Route::get('items',[SalesController::class,'index'])->name('items');
+    });
 
 Route::middleware('agent')->prefix('agent')->name('agent.')->group(function(){
     Route::get('/',[AgentController::class,'index'])->name('dashboard');
-    Route::get('clients',[ClientController::class,'index'])->name('clients');
-    Route::get('client/profile/{client}',[ClientController::class,'profile'])->name('clientprofile');
+    // Route::get('clients',[ClientController::class,'index'])->name('clients');
+    // Route::get('client/profile/{client}',[ClientController::class,'profile'])->name('clientprofile');
     Route::post('client/register',[ClientController::class,'store'])->name('registerclient');
     Route::put('client/update/{client}',[ClientController::class,'update'])->name('updateclient');
     Route::post('client/store-payment/{client}',[PaymentController::class,'store'])->name('addpayment');
-    Route::get('payments',[PaymentController::class,'index'])->name('payments');
-    Route::get('payments/show/{payment}',[PaymentController::class,'show'])->name('showpayment');
+    // Route::get('payments',[PaymentController::class,'index'])->name('payments');
+    // Route::get('payments/show/{payment}',[PaymentController::class,'show'])->name('showpayment');
     Route::post('payments/update/{payment}',[PaymentController::class,'update'])->name('updatepayment');
     Route::get('payment-processing/{payment}',[PaymentController::class,'processPayment'])->name('processpayment');
   
-    Route::get('items',[SalesController::class,'index'])->name('items');
+    // Route::get('items',[SalesController::class,'index'])->name('items');
    
     Route::controller(QuotationController::class)->group(function(){
         Route::get('quotations','index')->name('quotations');
@@ -71,12 +77,12 @@ Route::middleware('agent')->prefix('agent')->name('agent.')->group(function(){
         Route::delete('quotation/destroy/{quotation}','destroy')->name('deletequotation');
         
         Route::get('invoices','invoices')->name('invoices');
-        Route::get('client/edit-invoice/{invoice}','editInvoice')->name('editinvoice');
+        // Route::get('client/edit-invoice/{invoice}','editInvoice')->name('editinvoice');
         Route::delete('invoice/destroy/{invoice}','destroyInvoice')->name('deleteinvoice');
         // Route::get('view-invoice/{invoice}','invoice')->name('viewinvoice');
         // Route::get('invoice/{invoice}/pdf','invoicePdf')->name('invoicepdf');
         // Route::get('quotation/{quotation}/pdf','quotationPdf')->name('quotationpdf');
-        Route::post('client/update-invoice/{invoice}','updateInvoice')->name('updateinvoice');
+        // Route::post('client/update-invoice/{invoice}','updateInvoice')->name('updateinvoice');
         // Route::get('invoice-processing','processInvoice')->name('processinvoice');
 
     });

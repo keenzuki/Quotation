@@ -19,7 +19,7 @@ class AgentMiddleware
         if (Auth::check() && Auth::user()->role_id == 3) {
             return $next($request);
         } else {
-            return redirect()->route('home');
+            return redirect()->back()->with('error','You are not yet authorized to perform this action');
         }
     }
 }

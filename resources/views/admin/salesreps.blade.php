@@ -25,7 +25,7 @@
                                 <th>#</th>
                                 <th>Name</th>
                                 <th>Phone</th>
-                                <th>Address</th>
+                                <th>Email</th>
                                 <th>Action</th>
                             </tr>
                         </thead>
@@ -36,7 +36,7 @@
                                         {{ $key + 1 }}</td>
                                     <td>{{ $rep->fname }} {{ $rep->lname }}</td>
                                     <td>{{ $rep->phone }}</td>
-                                    <td>{{ $rep->address }}</td>
+                                    <td>{{ $rep->email }}</td>
                                     <td>
                                         <a class="btn btn-primary"
                                             href="{{ route('admin.repprofile', ['rep' => $rep->id]) }}">profile</a>
